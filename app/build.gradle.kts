@@ -5,19 +5,15 @@ plugins {
 
 android {
     namespace = "com.corn.hyundaiproject"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 35
 
     // 차량 하드웨어 데이터 접근용 (에어컨, 창문 등)
     useLibrary("android.car")
 
     defaultConfig {
         applicationId = "com.corn.hyundaiproject"
-        minSdk = 34
-        targetSdk = 36
+        minSdk = 31
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 

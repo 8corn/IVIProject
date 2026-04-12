@@ -20,8 +20,12 @@ class MainActivity : ComponentActivity() {
 
         // ViewModel 생성 (Factory 사용)
         val viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MainViewModel(repository) as T
+                if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                    return MainViewModel(repository) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
             }
         })[MainViewModel::class.java]
 

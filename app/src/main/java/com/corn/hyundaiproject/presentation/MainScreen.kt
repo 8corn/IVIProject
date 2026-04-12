@@ -1,6 +1,7 @@
 package com.corn.hyundaiproject.presentation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
 
 @Composable
@@ -25,18 +28,29 @@ fun MainScreen(viewModel: MainViewModel) {
                 .weight(7f)
                 .fillMaxHeight()
         ) {
-            Text(
-                text = "지도/내비 영역",
-            )
-
-            Button(
-                onClick = {
-                    viewModel.toggleWindow()
-                }
+            Column (
+                modifier = Modifier
             ) {
                 Text(
-                    text = "창문 제어"
+                    text = "지도/내비 영역",
+                    )
+
+                Text(
+                    text = "현재 설정 온도: ${hvacState.temperature}°C",
+                    style = TextStyle(
+                        fontSize = 30.sp
+                    )
                 )
+
+                Button(
+                    onClick = {
+                        viewModel.toggleWindow()
+                    }
+                ) {
+                    Text(
+                        text = "창문 제어"
+                    )
+                }
             }
         }
     }
