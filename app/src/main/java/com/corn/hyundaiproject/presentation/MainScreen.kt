@@ -13,11 +13,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
+import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
-    val hvacState by viewModel.hvacState.collectAsState()
+fun MainScreen(
+    mainViewModel: MainViewModel,
+    carViewModel: CarViewModel,
+) {
+    val hvacState by mainViewModel.hvacState.collectAsState()
 
     Row(
         modifier = Modifier
@@ -44,7 +48,7 @@ fun MainScreen(viewModel: MainViewModel) {
 
                 Button(
                     onClick = {
-                        viewModel.toggleWindow()
+                        mainViewModel.toggleWindow()
                     }
                 ) {
                     Text(

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.corn.hyundaiproject.data.car.CarPropertyDataSource
 import com.corn.hyundaiproject.data.repository.CarRepositoryImpl
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiProjectTheme
+import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
 
 class MainActivity : ComponentActivity() {
@@ -18,20 +19,27 @@ class MainActivity : ComponentActivity() {
         val dataSource = CarPropertyDataSource(applicationContext)
         val repository = CarRepositoryImpl(dataSource)
 
-        // ViewModel 생성 (Factory 사용)
-        val viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
+        // repository를 가져오기 위해(Hilt가 도입되면 사라질 코드)
+        @Suppress("UNCHECKED_CAST")
+        val factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-                    return MainViewModel(repository) as T
+                return when {
+                    modelClass.isAssignableFrom(MainViewModel::class.java) -> MainViewModel(repository) as T
+                    modelClass.isAssignableFrom(CarViewModel::class.java) -> CarViewModel(application, repository) as T
+                    else -> throw IllegalArgumentException("Unknown ViewModel class")
                 }
-                throw IllegalArgumentException("Unknown ViewModel class")
             }
-        })[MainViewModel::class.java]
+        }
+
+        val mainViewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
+        val carViewModel = ViewModelProvider(this, factory)[CarViewModel::class.java]
 
         setContent {
             HyundaiProjectTheme {
-                MainScreen(viewModel = viewModel)
+                MainScreen(
+                    mainViewModel = mainViewModel,
+                    carViewModel = carViewModel
+                )
             }
         }
     }

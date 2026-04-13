@@ -16,4 +16,8 @@ class CarPropertyDataSource(context: Context) {
     private val helper = CarPropertyManagerHelper(context) { newTemp ->
         _temperature.value = newTemp
     }
+
+    fun closeConnection() {
+        helper.release()
+    }
 }

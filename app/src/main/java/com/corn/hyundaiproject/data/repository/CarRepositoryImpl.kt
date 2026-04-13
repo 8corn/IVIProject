@@ -7,4 +7,8 @@ import kotlinx.coroutines.flow.StateFlow
 class CarRepositoryImpl(private val dataSource: CarPropertyDataSource) {
     // DataSource의 Flow를 그대로 ViewModel로 통과시킴
     val temperature: StateFlow<Float> = dataSource.temperature
+
+    fun releaseResources() {
+        dataSource.closeConnection()
+    }
 }
