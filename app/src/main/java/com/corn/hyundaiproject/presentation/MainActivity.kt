@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.corn.hyundaiproject.data.car.CarPropertyDataSource
 import com.corn.hyundaiproject.data.repository.CarRepositoryImpl
+import com.corn.hyundaiproject.domain.usecase.GetTemperatureUseCase
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiProjectTheme
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
@@ -24,8 +25,13 @@ class MainActivity : ComponentActivity() {
         val factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return when {
-                    modelClass.isAssignableFrom(MainViewModel::class.java) -> MainViewModel(repository) as T
-                    modelClass.isAssignableFrom(CarViewModel::class.java) -> CarViewModel(application, repository) as T
+                    modelClass.isAssignableFrom(MainViewModel::class.java) -> {
+                        val useCase = GetTemperatureUseCase(repository)
+                        MainViewModel(useCase, repository) as T
+                    }
+                    modelClass.isAssignableFrom(CarViewModel::class.java) -> {
+                        CarViewModel(application, repository) as T
+                    }
                     else -> throw IllegalArgumentException("Unknown ViewModel class")
                 }
             }

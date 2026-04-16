@@ -191,6 +191,27 @@ class CarPropertyManagerHelper(
         )
     }
 
+    fun setTemperature(value: Float) {
+        try {
+            propertyManager?.setFloatProperty(358614275, 49, value)
+            Log.d("data/car/Helper", "온도 변경 명령 전송: $value")
+        } catch (e: Exception) {
+            Log.e("data/car/Helper", "온도 변경 실패: ${e.message}")
+        }
+    }
+
+    fun setDoorLock(lock: Boolean) {
+        val propertyId = 289472773
+        val value = if (lock) 1 else 0
+
+        try {
+            propertyManager?.setIntProperty(propertyId, 0, value)
+            Log.d("data/car/Helper", "문 잠금 명령 전소이 $lock")
+        } catch (e: Exception) {
+            Log.e("data/car/Helper", "명령 전송 실패: ${e.message}")
+        }
+    }
+
     fun release() {
         try {
             propertyManager?.unregisterCallback(propertyCallback)

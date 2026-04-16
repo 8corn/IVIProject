@@ -17,6 +17,12 @@ class CarPropertyDataSource(context: Context) {
         _temperature.value = newTemp
     }
 
+    fun setTemperature(temp: Float) {
+        helper.setTemperature(temp)
+    }
+
+    fun setDoorLock(lock: Boolean) = helper.setDoorLock(lock)
+
     fun closeConnection() {
         helper.release()
     }

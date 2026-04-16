@@ -8,6 +8,12 @@ class CarRepositoryImpl(private val dataSource: CarPropertyDataSource) {
     // DataSource의 Flow를 그대로 ViewModel로 통과시킴
     val temperature: StateFlow<Float> = dataSource.temperature
 
+    fun setTemperature(temp: Float) {
+        dataSource.setTemperature(temp)
+    }
+
+    fun setDoorLock(lock: Boolean) = dataSource.setDoorLock(lock)
+
     fun releaseResources() {
         dataSource.closeConnection()
     }
