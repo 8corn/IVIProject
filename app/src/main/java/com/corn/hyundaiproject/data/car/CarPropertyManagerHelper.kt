@@ -12,7 +12,7 @@ import android.util.Log
 
 class CarPropertyManagerHelper(
     context: Context,
-    private val onTemperatureChanged: (Float) -> Unit
+    private val onTemperatureChanged: (propertyId: Int, value: Any) -> Unit
 ) {
     private var car: Car? = null
     private var propertyManager: CarPropertyManager? = null
@@ -37,11 +37,14 @@ class CarPropertyManagerHelper(
             when (propertyId) {
                 VehiclePropertyIds.HVAC_TEMPERATURE_SET -> {
                     val temp = rawValue as? Float ?: 0f
-                    onTemperatureChanged(temp)
+                    onTemperatureChanged(propertyId, rawValue)
                     Log.d("data/car/CarHelper", "설정 온도: $temp")
                 }
                 VehiclePropertyIds.ENV_OUTSIDE_TEMPERATURE -> Log.d("data/car/CarHelper", "외부 온도: $rawValue")
-                VehiclePropertyIds.PERF_VEHICLE_SPEED -> Log.d("data/car/CarHelper", "실시간 속도: $rawValue km/h")
+                VehiclePropertyIds.PERF_VEHICLE_SPEED -> {
+                    onTemperatureChanged(propertyId, rawValue)
+                    Log.d("data/car/CarHelper", "실시간 속도: $rawValue km/h")
+                }
                 VehiclePropertyIds.GEAR_SELECTION -> Log.d("data/car/CarHelper", "현재 기어: $rawValue")
                 VehiclePropertyIds.NIGHT_MODE -> Log.d("data/car/CarHelper", "야간 모드 상태: $rawValue")
                 VehiclePropertyIds.FUEL_LEVEL -> Log.d("data/car/CarHelper", "연료 잔량: $rawValue")
@@ -147,7 +150,7 @@ class CarPropertyManagerHelper(
             289472780,
             289472773,
             289472775,
-            356517135
+            356517135,
         )
         val normalProps = listOf(
             VehiclePropertyIds.ENV_OUTSIDE_TEMPERATURE,
@@ -156,7 +159,7 @@ class CarPropertyManagerHelper(
             291504390,
             356516106,
             356517131,
-            291570965
+            291570965,
         )
 
         // 지원되는 속성만 필터링해서 등록

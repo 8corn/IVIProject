@@ -30,6 +30,8 @@ class MainViewModel(
             initialValue = HvacState()
         )       // stateIn은 이 파이프라인을 뷰모델이 살아있는 동안 계속 유지
 
+    val drivingStatus: StateFlow<String> = repository.drivingStatus
+
     fun updateTemperature(delta: Float) {
         val currentTemp = hvacState.value.temperature
         val newTemp = currentTemp + delta
