@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.corn.hyundaiproject.data.repository.CarRepositoryImpl
 import com.corn.hyundaiproject.domain.usecase.GetTemperatureUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class MainViewModel(
+@HiltViewModel
+class MainViewModel @Inject constructor (
     private val getTemperatureUseCase: GetTemperatureUseCase,
     private val repository: CarRepositoryImpl
 ) : ViewModel() {
@@ -33,6 +36,7 @@ class MainViewModel(
 
     val drivingStatus: StateFlow<String> = repository.drivingStatus
     val climateAdvice: StateFlow<String> = repository.climateAdvice
+    val vehicleDetails: StateFlow<Map<String, String>> = repository.vehicleDetails
 
     fun updateTemperature(delta: Float) {
         val currentTemp = hvacState.value.temperature

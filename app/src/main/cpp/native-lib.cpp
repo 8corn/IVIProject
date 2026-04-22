@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <string>
 #include <ctime>
+#include <random>
 
 // 연비
 extern "C" JNIEXPORT jint JNICALL
@@ -12,7 +13,7 @@ Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getEfficiencyGrade(
     return 4;
 }
 
-// 속도
+// 위험 속도 확인 속도
 extern "C" JNIEXPORT jstring JNICALL
 Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_checkDrivingStatus(
         JNIEnv* env, jobject /* this */, jfloat speed) {
@@ -77,4 +78,43 @@ Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_isHazardous(
         return JNI_TRUE;
     }
     return JNI_FALSE;
+}
+
+extern "C" JNIEXPORT jobject JNICALL
+Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getDetailedCarData(
+        JNIEnv *env, jobject thiz, jfloat speed) {
+    jclass mapClass = env->FindClass("java/util/HashMap");
+    jmethodID init = env->GetMethodID(mapClass, "<init>", "()V");
+    jobject hashMap = env->NewObject(mapClass, init);
+    jmethodID put = env->GetMethodID(mapClass, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+
+    // 속도
+    std::string speedStr = std::to_string(static_cast<int>(speed));
+
+    // 가상의 RPM 계산
+    int calculatedRpm = static_cast<int>(speed * 55) + 800;
+    if (calculatedRpm > 9000) calculatedRpm = 9000;
+
+    std::string rpmStr = std::to_string(calculatedRpm);
+    std::string mode = (speed > 120) ? "SPORT+" : (speed > 80) ? "SPORT" : (speed > 50) ? "ECO" : "NORMAL";
+
+    // 엔진 온도 랜덤 형식(테스트)
+    // 난수 생성 (c++ 11 스타일)
+    static std::random_device rd;
+    static std::default_random_engine generator(rd());
+    std::uniform_real_distribution<float> distribution(-0.5f, 0.5f);
+    // 온도 계산
+    float baseTemp = 90.5f;
+    float currentTemp = baseTemp + distribution(generator);
+    // 소수정 한자리까지 자르기
+    char tempBuffer[10];
+    sprintf(tempBuffer, "%.1f", currentTemp);
+
+    // rpm, 현재 주행 모드, 엔진 온도
+    env->CallObjectMethod(hashMap, put, env->NewStringUTF("rpm"), env->NewStringUTF(speedStr.c_str()));
+    env->CallObjectMethod(hashMap, put, env->NewStringUTF("rpm"), env->NewStringUTF(rpmStr.c_str()));
+    env->CallObjectMethod(hashMap, put, env->NewStringUTF("drive_mode"), env->NewStringUTF(mode.c_str()));
+    env->CallObjectMethod(hashMap, put, env->NewStringUTF("engine_temp"), env->NewStringUTF(tempBuffer));
+
+    return hashMap;
 }

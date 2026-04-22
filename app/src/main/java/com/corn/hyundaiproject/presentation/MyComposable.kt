@@ -166,7 +166,7 @@ fun ControlWidget(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Text(
-                        text = if (isLocked) "문 열림" else "문 닫힘",
+                        text = if (!isLocked) "문 열림" else "문 닫힘",
                         fontWeight = FontWeight.Bold
                     )
                 }

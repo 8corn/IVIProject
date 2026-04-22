@@ -23,6 +23,7 @@ class CarPropertyDataSource(context: Context) {
     private external fun getClimateAdvice(exteriorTemp: Float, interiorTemp: Float): String
     private external fun checkFuelStatus(fuelLevel: Float): String
     private external fun isHazardous(gear: Int, isDoorOpen: Boolean): Boolean
+    private external fun getDetailedCarData(speed: Float): Map<String, String>
 
     // 상태 저장용 변수 (상태 판단을 위해 필요)
     private var currentGear: Int = 0
@@ -42,6 +43,11 @@ class CarPropertyDataSource(context: Context) {
     private val _isDoorLocked = MutableStateFlow(true)
     val isDoorLocked: StateFlow<Boolean> = _isDoorLocked.asStateFlow()
 
+    private val _vehicleDetails = MutableStateFlow(
+        mapOf("rpm" to "0", "drive_mode" to "NORMAL", "engine_temp" to "90.5")
+    )
+    val vehicleDetails: StateFlow<Map<String, String>> = _vehicleDetails.asStateFlow()
+
     // Helper를 생성하면서 콜백(람다)을 전달
     // Helper에서 onTemperatureChanged(temp)를 호출하면 이 블록이 실행됨
     private val helper = CarPropertyManagerHelper(context) { propertyId, value ->
@@ -57,7 +63,11 @@ class CarPropertyDataSource(context: Context) {
             VehiclePropertyIds.PERF_VEHICLE_SPEED -> {
                 val speed = value as Float
                 _drivingStatus.value = checkDrivingStatus(speed)
-                Log.d("G70_Native", "속도: ${checkDrivingStatus(speed)}")
+
+                val newDetails = getDetailedCarData(speed)
+                _vehicleDetails.value = LinkedHashMap(newDetails)
+
+                Log.d("G70_Native", "속도: ${checkDrivingStatus(speed)}, 상시 데이터: ${_vehicleDetails.value}")
             }
             VehiclePropertyIds.GEAR_SELECTION -> {
                 currentGear = value as Int

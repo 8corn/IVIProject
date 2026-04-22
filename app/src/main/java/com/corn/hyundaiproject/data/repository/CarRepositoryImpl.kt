@@ -10,6 +10,7 @@ class CarRepositoryImpl(private val dataSource: CarPropertyDataSource) {
     val drivingStatus: StateFlow<String> = dataSource.drivingStatus
     val climateAdvice: StateFlow<String> = dataSource.climateAdvice
     val isDoorLocked: StateFlow<Boolean> = dataSource.isDoorLocked
+    val vehicleDetails: StateFlow<Map<String, String>> = dataSource.vehicleDetails
 
     fun setTemperature(temp: Float) {
         dataSource.setTemperature(temp)
@@ -17,7 +18,7 @@ class CarRepositoryImpl(private val dataSource: CarPropertyDataSource) {
 
     fun setDoorLock(lock: Boolean) = dataSource.setDoorLock(lock)
 
-    fun releaseResources() {
+    fun closeConnection() {
         dataSource.closeConnection()
     }
 }

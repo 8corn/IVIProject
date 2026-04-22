@@ -1,7 +1,5 @@
 package com.corn.hyundaiproject.presentation
 
-import android.graphics.drawable.Icon
-import androidx.car.app.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,12 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -24,8 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,6 +36,7 @@ fun MainScreen(
     val hvacState by mainViewModel.hvacState.collectAsState()
     val drivingStatus by mainViewModel.drivingStatus.collectAsState()
     val climateAdvice by mainViewModel.climateAdvice.collectAsState()
+    val details by mainViewModel.vehicleDetails.collectAsState()
 
     Row(
         modifier = Modifier
@@ -68,18 +62,45 @@ fun MainScreen(
                     fontWeight = FontWeight.Black
                 )
 
+                val currentRpm = details["rpm"]?.toIntOrNull() ?: 0
+
+                Row {
+                    Text(
+                        text = "${details["speed"] ?: 0} MPH",
+                        color = Color.White,
+                        fontSize = 50.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.width(20.dp))
+
+                    Text(
+                        text = "$currentRpm RPM",
+                        color = if (currentRpm >= 7000) G70Red else Color.White,
+                        fontSize = 50.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
                 Text(
-                    text = "Drive Mode",
+                    text = "현재 모드: ${details["drive_mode"] ?: "알 수 없음"}",
                     color = Color.White,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Text(
+                    text = "엔진온도: ${details["engine_temp"] ?: "0"}°C",
+                    color = Color.LightGray,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+
+                Text(
                     text = drivingStatus,
                     color = if (drivingStatus.contains("위험")) G70Red else Color.White,
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Medium
                 )
 
                 Text(
