@@ -21,7 +21,8 @@ class MainViewModel(
         .map { info ->
             HvacState(
                 temperature = info.temperature,
-                warningMessage = info.warningMessage
+                warningMessage = info.warningMessage,
+                isDoorLocked = info.isDoorLocked
             )
         }       // map 함수가 판단 결과(HvacInfo)를 UI가 이해하는 쉬운 HvacState로 변환
         .stateIn(
@@ -31,6 +32,7 @@ class MainViewModel(
         )       // stateIn은 이 파이프라인을 뷰모델이 살아있는 동안 계속 유지
 
     val drivingStatus: StateFlow<String> = repository.drivingStatus
+    val climateAdvice: StateFlow<String> = repository.climateAdvice
 
     fun updateTemperature(delta: Float) {
         val currentTemp = hvacState.value.temperature

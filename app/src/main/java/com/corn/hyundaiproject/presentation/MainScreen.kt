@@ -42,6 +42,7 @@ fun MainScreen(
 ) {
     val hvacState by mainViewModel.hvacState.collectAsState()
     val drivingStatus by mainViewModel.drivingStatus.collectAsState()
+    val climateAdvice by mainViewModel.climateAdvice.collectAsState()
 
     Row(
         modifier = Modifier
@@ -77,6 +78,13 @@ fun MainScreen(
                 Text(
                     text = drivingStatus,
                     color = if (drivingStatus.contains("위험")) G70Red else Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = climateAdvice,
+                    color = if (climateAdvice.contains("경고")) G70Red else Color.White,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )

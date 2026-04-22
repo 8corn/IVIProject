@@ -7,8 +7,9 @@ import kotlinx.coroutines.flow.StateFlow
 class CarRepositoryImpl(private val dataSource: CarPropertyDataSource) {
     // DataSource의 Flow를 그대로 ViewModel로 통과시킴
     val temperature: StateFlow<Float> = dataSource.temperature
-
     val drivingStatus: StateFlow<String> = dataSource.drivingStatus
+    val climateAdvice: StateFlow<String> = dataSource.climateAdvice
+    val isDoorLocked: StateFlow<Boolean> = dataSource.isDoorLocked
 
     fun setTemperature(temp: Float) {
         dataSource.setTemperature(temp)
