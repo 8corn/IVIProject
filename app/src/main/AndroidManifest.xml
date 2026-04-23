@@ -5,6 +5,9 @@
     <uses-permission android:name="android.car.permission.CONTROL_CAR_CLIMATE" />
     <uses-permission android:name="android.car.permission.CAR_INFO" />
     <uses-permission android:name="android.car.permission.CAR_ENERGY" />
+    <uses-permission android:name="android.car.permission.CAR_ENERGY_PORTS" />
+    <uses-permission android:name="android.car.permission.CAR_SPEED" />
+    <uses-permission android:name="android.car.permission.READ_CAR_DISPLAY_UNITS" />
 
     <application
         android:name=".MyCarApp"
@@ -20,7 +23,7 @@
             android:exported="true">
             <meta-data
                 android:name="distractionOptimized"
-                android:value="true"/>
+                android:value="true" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,5 +31,9 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-feature
+        android:name="android.hardware.type.automotive"
+        android:required="true" />
 
 </manifest>

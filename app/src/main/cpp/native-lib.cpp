@@ -111,7 +111,7 @@ Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getDetailedCarData(
     sprintf(tempBuffer, "%.1f", currentTemp);
 
     // rpm, 현재 주행 모드, 엔진 온도
-    env->CallObjectMethod(hashMap, put, env->NewStringUTF("rpm"), env->NewStringUTF(speedStr.c_str()));
+    env->CallObjectMethod(hashMap, put, env->NewStringUTF("speed"), env->NewStringUTF(speedStr.c_str()));
     env->CallObjectMethod(hashMap, put, env->NewStringUTF("rpm"), env->NewStringUTF(rpmStr.c_str()));
     env->CallObjectMethod(hashMap, put, env->NewStringUTF("drive_mode"), env->NewStringUTF(mode.c_str()));
     env->CallObjectMethod(hashMap, put, env->NewStringUTF("engine_temp"), env->NewStringUTF(tempBuffer));
