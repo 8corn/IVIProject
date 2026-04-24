@@ -103,13 +103,13 @@ class CarPropertyDataSource(context: Context) {
         }
     }
 
-//    // 속도 주행 UI 변경 테스트 코드
-//    init {
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            val testResult = checkDrivingStatus(120f)
-//            _drivingStatus.value = "테스트 중: $testResult"
-//        }, 3000)
-//    }
+    // 속도 주행 UI 변경 테스트 코드
+    init {
+        Handler(Looper.getMainLooper()).postDelayed({
+            val testResult = checkDrivingStatus(120f)
+            _drivingStatus.value = "테스트 중: $testResult"
+        }, 3000)
+    }
 
     fun setTemperature(temp: Float) {
         helper.setTemperature(temp)
