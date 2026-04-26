@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,7 +35,7 @@ import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel,
-    carViewModel: CarViewModel,
+    onSettingsClick: () -> Unit
 ) {
     val hvacState by mainViewModel.hvacState.collectAsState()
     val drivingStatus by mainViewModel.drivingStatus.collectAsState()
@@ -148,6 +152,18 @@ fun MainScreen(
                     mainViewModel.toggleWindow()
                 }
             )
+
+            IconButton(
+                onClick = onSettingsClick,
+                modifier = Modifier.align(Alignment.Start)
+                    .padding(8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.Gray
+                )
+            }
 
             Box(
                 modifier = Modifier

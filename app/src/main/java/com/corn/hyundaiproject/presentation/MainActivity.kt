@@ -3,6 +3,10 @@ package com.corn.hyundaiproject.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -20,14 +24,24 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+
+            // hiltViewModel()이 자동으로 Factory를 만들어서 뷰모델을 생성해줌
+            val mainViewModel: MainViewModel = hiltViewModel()
+            val carViewModel: CarViewModel = hiltViewModel()
+
+            var currentScreen by remember { mutableStateOf("main") }
+
             HyundaiProjectTheme {
-                // hiltViewModel()이 자동으로 Factory를 만들어서 뷰모델을 생성해줌
-                val mainViewModel: MainViewModel = hiltViewModel()
-                val carViewModel: CarViewModel = hiltViewModel()
-                MainScreen(
-                    mainViewModel = mainViewModel,
-                    carViewModel = carViewModel
-                )
+                when (currentScreen) {
+                    "main" -> MainScreen(
+                        mainViewModel = mainViewModel,
+                        onSettingsClick = { currentScreen = "setting" }
+                    )
+                    "settings" -> SettingScreen(
+                        carViewModel = carViewModel,
+                        onBackClick = { currentScreen = "main" }
+                    )
+                }
             }
         }
     }

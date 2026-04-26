@@ -78,6 +78,12 @@ class CarPropertyDataSource(context: Context) {
                 isAnyDoorOpen = (value as? Array<*>)?.any { (it as? Int ?: 0) > 0 } ?: false
                 checkDoorSafety()
             }
+            289472773 -> {
+                // 문 잠금 상태
+                val locked = (value as? Int) == 1
+                _isDoorLocked.value = locked
+                Log.d("G70_Native", "문 잠금 상태 변경됨: $locked")
+            }
             VehiclePropertyIds.FUEL_LEVEL -> {
                 val fuel = value as Float
                 Log.d("G70_Native", checkFuelStatus(fuel))
@@ -103,13 +109,13 @@ class CarPropertyDataSource(context: Context) {
         }
     }
 
-    // 속도 주행 UI 변경 테스트 코드
-    init {
-        Handler(Looper.getMainLooper()).postDelayed({
-            val testResult = checkDrivingStatus(120f)
-            _drivingStatus.value = "테스트 중: $testResult"
-        }, 3000)
-    }
+//    // 속도 주행 UI 변경 테스트 코드
+//    init {
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            val testResult = checkDrivingStatus(120f)
+//            _drivingStatus.value = "테스트 중: $testResult"
+//        }, 3000)
+//    }
 
     fun setTemperature(temp: Float) {
         helper.setTemperature(temp)

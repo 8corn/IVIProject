@@ -174,3 +174,26 @@ fun ControlWidget(
         }
     }
 }
+
+@Composable
+fun SettingItem(title: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = title,
+            color = Color.LightGray,
+            fontSize = 18.sp
+        )
+
+        Text(
+            text = value,
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
