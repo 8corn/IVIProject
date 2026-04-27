@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,16 +32,20 @@ import com.corn.hyundaiproject.presentation.ui.theme.DeepGray
 import com.corn.hyundaiproject.presentation.ui.theme.G70Red
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
+import com.corn.hyundaiproject.presentation.viewModel.MediaViewModel
 
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel,
+    mediaViewModel: MediaViewModel,
     onSettingsClick: () -> Unit
 ) {
     val hvacState by mainViewModel.hvacState.collectAsState()
     val drivingStatus by mainViewModel.drivingStatus.collectAsState()
     val climateAdvice by mainViewModel.climateAdvice.collectAsState()
     val details by mainViewModel.vehicleDetails.collectAsState()
+
+    val mediaState by mediaViewModel.mediaState.collectAsState()
 
     Row(
         modifier = Modifier
@@ -153,28 +158,23 @@ fun MainScreen(
                 }
             )
 
-            IconButton(
-                onClick = onSettingsClick,
-                modifier = Modifier.align(Alignment.Start)
-                    .padding(8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings",
-                    tint = Color.Gray
-                )
-            }
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(CarbonBlack, RoundedCornerShape(24.dp)),
-                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Media Player",
-                    color = Color.DarkGray
+                MediaWidget(
+                    state = mediaState,
+                    onPlayPause = {
+                        mediaViewModel.togglePlay()
+                    },
+                    onSkipForward = {
+                        mediaViewModel.skipForward()
+                    },
+                    onSkipBackward = {
+                        mediaViewModel.skipBackward()
+                    },
+                    onSettingsClick = onSettingsClick
                 )
             }
         }

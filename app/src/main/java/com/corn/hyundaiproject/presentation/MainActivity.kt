@@ -16,6 +16,7 @@ import com.corn.hyundaiproject.domain.usecase.GetTemperatureUseCase
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiProjectTheme
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
+import com.corn.hyundaiproject.presentation.viewModel.MediaViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
             // hiltViewModel()이 자동으로 Factory를 만들어서 뷰모델을 생성해줌
             val mainViewModel: MainViewModel = hiltViewModel()
             val carViewModel: CarViewModel = hiltViewModel()
+            val mediaViewModel: MediaViewModel = hiltViewModel()
 
             var currentScreen by remember { mutableStateOf("main") }
 
@@ -35,7 +37,8 @@ class MainActivity : ComponentActivity() {
                 when (currentScreen) {
                     "main" -> MainScreen(
                         mainViewModel = mainViewModel,
-                        onSettingsClick = { currentScreen = "setting" }
+                        mediaViewModel = mediaViewModel,
+                        onSettingsClick = { currentScreen = "settings" }
                     )
                     "settings" -> SettingScreen(
                         carViewModel = carViewModel,
