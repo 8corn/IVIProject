@@ -246,7 +246,7 @@ fun MediaWidget(
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.height(5.dp))
 
             Column(
                 modifier = Modifier
@@ -300,7 +300,7 @@ fun MediaWidget(
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,

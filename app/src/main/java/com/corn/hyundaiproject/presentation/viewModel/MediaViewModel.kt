@@ -1,8 +1,16 @@
 package com.corn.hyundaiproject.presentation.viewModel
 
+import android.content.Context
+import androidx.annotation.OptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.RawResourceDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import com.corn.hyundaiproject.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,63 +35,79 @@ private fun formatTime(seconds: Int): String {
 }
 
 @HiltViewModel
-class MediaViewModel @Inject constructor() : ViewModel() {
+class MediaViewModel @Inject constructor(
+    @param:ApplicationContext private val context: Context
+) : ViewModel() {
+    private var exoPlayer: ExoPlayer? = null
     private val _mediaState = MutableStateFlow(MediaState())
     val mediaState: StateFlow<MediaState> = _mediaState.asStateFlow()
 
-    private val totalDurationSeconds = 225
-
     init {
+        setupPlayer()
+        updateProgress()
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun setupPlayer() {
+        exoPlayer = ExoPlayer.Builder(context).build().apply {
+            val mediaItem = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.bad_day))
+            setMediaItem(mediaItem)
+            prepare()
+        }
+    }
+
+    private fun updateProgress() {
         viewModelScope.launch {
             while (true) {
-                val currentState = _mediaState.value
+                exoPlayer?.let { player ->
+                    val currentPos = player.currentPosition
+                    val duration = player.duration.coerceAtLeast(10L)
 
-                if (currentState.isPlaying && currentState.progress < 1.0f) {
-                    val nextProgress = (currentState.progress + 0.005f).coerceAtMost(1.0f)
-                    val currentSecs = (totalDurationSeconds * nextProgress).toInt()
+                    if (duration > 0) {
+                        val progress = currentPos.toFloat() / duration.toFloat()
 
-                    _mediaState.value = currentState.copy(
-                        progress = nextProgress,
-                        currentTime = formatTime(currentSecs)
-                    )
-                } else {
-                    moveToNextSong()
+                        _mediaState.value = _mediaState.value.copy(
+                            progress = progress,
+                            currentTime = formatTime((currentPos / 1000).toInt()),
+                            totalTime = formatTime((duration / 1000).toInt()),
+                            isPlaying = player.isPlaying
+                        )
+                    }
                 }
-                delay(1000)
+                delay(500)
             }
         }
     }
 
     fun skipForward() {
-        val newProgress = (_mediaState.value.progress + 0.05f).coerceAtMost(1f)
-        val currentSecs = (totalDurationSeconds * newProgress).toInt()
-        _mediaState.value = _mediaState.value.copy(
-            progress = newProgress,
-            currentTime = formatTime(currentSecs)
-        )
+        exoPlayer?.let {
+            val seekPos = (it.currentPosition + 10000).coerceAtMost(it.duration)
+            it.seekTo(seekPos)
+        }
     }
 
     fun skipBackward() {
-        val newProgress = (_mediaState.value.progress - 0.05f).coerceAtLeast(0f)
-        val currentSecs = (totalDurationSeconds * newProgress).toInt()
-        _mediaState.value = _mediaState.value.copy(
-            progress = newProgress,
-            currentTime = formatTime(currentSecs)
-        )
+        exoPlayer?.let {
+            val seekPos = (it.currentPosition - 10000).coerceAtLeast(0L)
+            it.seekTo(seekPos)
+        }
     }
 
     fun togglePlay() {
-        _mediaState.value = _mediaState.value.copy(
-            isPlaying = !_mediaState.value.isPlaying
-        )
+        exoPlayer?.let {
+            if (it.isPlaying) {
+                it.pause()
+                _mediaState.value = _mediaState.value.copy(isPlaying = false)
+            } else {
+                it.play()
+                _mediaState.value = _mediaState.value.copy(isPlaying = true)
+            }
+        }
     }
 
-    private fun moveToNextSong() {
-        _mediaState.value = _mediaState.value.copy(
-            title = "Next Sport+ Track",
-            progress = 0f,
-            currentTime = "00:00",
-            isPlaying = true
-        )
+    override fun onCleared() {
+        super.onCleared()
+        exoPlayer?.release()
+        exoPlayer = null
     }
 }
