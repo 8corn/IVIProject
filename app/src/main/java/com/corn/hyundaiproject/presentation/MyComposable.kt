@@ -26,6 +26,8 @@ import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Replay10
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -310,8 +312,8 @@ fun MediaWidget(
                     onClick = onSkipBackward
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Replay10,
-                        contentDescription = null,
+                        imageVector = Icons.Default.SkipPrevious,
+                        contentDescription = "Previous Track",
                         tint = Color.White,
                         modifier = Modifier
                             .size(40.dp)
@@ -336,8 +338,8 @@ fun MediaWidget(
                     onClick = onSkipForward
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Forward10,
-                        contentDescription = null,
+                        imageVector = Icons.Default.SkipNext,
+                        contentDescription = "Next Track",
                         tint = Color.White,
                         modifier = Modifier
                             .size(40.dp)

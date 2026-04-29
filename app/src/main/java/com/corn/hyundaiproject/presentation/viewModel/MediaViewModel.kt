@@ -5,6 +5,8 @@ import androidx.annotation.OptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.exoplayer.ExoPlayer
@@ -50,9 +52,25 @@ class MediaViewModel @Inject constructor(
     @OptIn(UnstableApi::class)
     private fun setupPlayer() {
         exoPlayer = ExoPlayer.Builder(context).build().apply {
-            val mediaItem = MediaItem.fromUri(RawResourceDataSource.buildRawResourceUri(R.raw.bad_day))
-            setMediaItem(mediaItem)
+            val items = listOf(
+                createMediaItem(R.raw.bad_day, "Bad Day", "Daniel Powter"),
+                createMediaItem(R.raw.congrats, "Congrats", "LANY"),
+                createMediaItem(R.raw.gone_gone_gone, "Gone, Gone, Gone", "Phillip Phillips")
+            )
+
+            setMediaItems(items)
             prepare()
+
+            addListener(object : Player.Listener {
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    mediaItem?.mediaMetadata?.let { metadata ->
+                        _mediaState.value = _mediaState.value.copy(
+                            title = metadata.title?.toString() ?: "Unknown",
+                            artist = metadata.artist?.toString() ?: "Unknown artist"
+                        )
+                    }
+                }
+            })
         }
     }
 
@@ -79,20 +97,6 @@ class MediaViewModel @Inject constructor(
         }
     }
 
-    fun skipForward() {
-        exoPlayer?.let {
-            val seekPos = (it.currentPosition + 10000).coerceAtMost(it.duration)
-            it.seekTo(seekPos)
-        }
-    }
-
-    fun skipBackward() {
-        exoPlayer?.let {
-            val seekPos = (it.currentPosition - 10000).coerceAtLeast(0L)
-            it.seekTo(seekPos)
-        }
-    }
-
     fun togglePlay() {
         exoPlayer?.let {
             if (it.isPlaying) {
@@ -109,5 +113,29 @@ class MediaViewModel @Inject constructor(
         super.onCleared()
         exoPlayer?.release()
         exoPlayer = null
+    }
+
+    @OptIn(UnstableApi::class)
+    private fun createMediaItem(rawId: Int, title: String, artist: String): MediaItem {
+        val uri = RawResourceDataSource.buildRawResourceUri(rawId)
+        return MediaItem.Builder()
+            .setUri(uri)
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(title)
+                    .setArtist(artist)
+                    .build()
+            )
+            .build()
+    }
+
+    fun skipToNext() {
+        exoPlayer?.seekToNext()
+        exoPlayer?.play()
+    }
+
+    fun skipToPrepare() {
+        exoPlayer?.seekToPrevious()
+        exoPlayer?.play()
     }
 }
