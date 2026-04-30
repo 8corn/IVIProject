@@ -1,6 +1,13 @@
 package com.corn.hyundaiproject.presentation
 
 import android.graphics.drawable.Icon
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,11 +46,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.corn.hyundaiproject.R
 import com.corn.hyundaiproject.presentation.ui.theme.CarbonBlack
 import com.corn.hyundaiproject.presentation.ui.theme.DeepGray
 import com.corn.hyundaiproject.presentation.ui.theme.G70Red
@@ -239,13 +250,35 @@ fun MediaWidget(
                     .background(DeepGray, RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.MusicNote,
-                    contentDescription = null,
-                    tint = G70Red,
-                    modifier = Modifier
-                        .size(80.dp)
-                )
+                AnimatedContent(
+                    targetState = state.title,
+                    transitionSpec = {
+                        (fadeIn(animationSpec = tween(500)) + scaleIn(initialScale = 0.92f))
+                            .togetherWith(fadeOut(animationSpec = tween(500)))
+                    },
+                    label = "AlbumArtAnimation"
+                ) { targetTitle ->
+                    val artRes = getAlbumArt(targetTitle)
+
+                    if (artRes != 0) {
+                        Image(
+                            painter = painterResource(id = artRes),
+                            contentDescription = "Album Art",
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(12.dp)),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.MusicNote,
+                            contentDescription = null,
+                            tint = G70Red,
+                            modifier = Modifier
+                                .size(80.dp)
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(5.dp))
@@ -363,5 +396,15 @@ fun MediaWidget(
                     .size(40.dp)
             )
         }
+    }
+}
+
+@Composable
+fun getAlbumArt(title: String): Int {
+    return when (title) {
+        "Bad Day" -> R.drawable.impmon
+        "Congrats" -> R.drawable.omegamon
+        "Gone, Gone, Gone" -> R.drawable.gilmon
+        else -> 0
     }
 }
