@@ -1,12 +1,12 @@
 package com.corn.hyundaiproject.presentation
 
-import android.graphics.drawable.Icon
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,15 +23,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Forward10
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.PauseCircleFilled
 import androidx.compose.material.icons.filled.PlayCircleFilled
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.Replay10
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.SkipPrevious
@@ -47,11 +44,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.corn.hyundaiproject.R
@@ -406,5 +406,72 @@ fun getAlbumArt(title: String): Int {
         "Congrats" -> R.drawable.omegamon
         "Gone, Gone, Gone" -> R.drawable.gilmon
         else -> 0
+    }
+}
+
+@Composable
+fun DashboardWidget(
+    speed: Int,
+    rpm: Float
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(CarbonBlack, RoundedCornerShape(24.dp))
+            .padding(20.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(
+            modifier = Modifier
+                .size(250.dp)
+        ) {
+            val center = Offset(size.width / 2, size.height / 2)
+            val radius = size.width / 2
+
+            drawArc(
+                color = Color.DarkGray,
+                startAngle = 135f,
+                sweepAngle = 270f,
+                useCenter = false,
+                style = Stroke(width = 12.dp.toPx(), cap = StrokeCap.Round)
+            )
+
+            val rpmSweep = (rpm / 7000f) * 270f
+            drawArc(
+                color = G70Red,
+                startAngle = 135f,
+                sweepAngle = rpmSweep,
+                useCenter = false,
+                style = Stroke(width = 12.dp.toPx(), cap = StrokeCap.Round)
+            )
+        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "$speed",
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 64.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+            )
+
+            Text(
+                text = "km/h",
+                color = Color.Gray,
+                fontSize = 18.sp
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Text(
+                text = "RPM ${rpm.toInt()}",
+                color = G70Red,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }

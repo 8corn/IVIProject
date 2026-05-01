@@ -27,17 +27,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.corn.hyundaiproject.presentation.ui.theme.CarbonBlack
 import com.corn.hyundaiproject.presentation.ui.theme.DeepGray
 import com.corn.hyundaiproject.presentation.ui.theme.G70Red
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
+import com.corn.hyundaiproject.presentation.viewModel.DashboardViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MediaViewModel
 
 @Composable
 fun MainScreen(
-    mainViewModel: MainViewModel,
-    mediaViewModel: MediaViewModel,
+    mainViewModel: MainViewModel = hiltViewModel(),
+    mediaViewModel: MediaViewModel = hiltViewModel(),
+    dashboardViewModel: DashboardViewModel = hiltViewModel(),
     onSettingsClick: () -> Unit
 ) {
     val hvacState by mainViewModel.hvacState.collectAsState()
@@ -46,6 +49,9 @@ fun MainScreen(
     val details by mainViewModel.vehicleDetails.collectAsState()
 
     val mediaState by mediaViewModel.mediaState.collectAsState()
+
+    val speed by dashboardViewModel.speed.collectAsState()
+    val rpm by dashboardViewModel.rpm.collectAsState()
 
     Row(
         modifier = Modifier
@@ -61,64 +67,69 @@ fun MainScreen(
                 .background(DeepGray, RoundedCornerShape(28.dp)),
             contentAlignment = Alignment.Center
         ) {
-            Column (
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "G70 Sport",
-                    color = G70Red,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Black
-                )
+            DashboardWidget(
+                speed = speed,
+                rpm = rpm
+            )
 
-                val currentRpm = details["rpm"]?.toIntOrNull() ?: 0
-
-                Row {
-                    Text(
-                        text = "${details["speed"] ?: 0} MPH",
-                        color = Color.White,
-                        fontSize = 50.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(modifier = Modifier.width(20.dp))
-
-                    Text(
-                        text = "$currentRpm RPM",
-                        color = if (currentRpm >= 7000) G70Red else Color.White,
-                        fontSize = 50.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                Text(
-                    text = "현재 모드: ${details["drive_mode"] ?: "알 수 없음"}",
-                    color = Color.White,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Text(
-                    text = "엔진온도: ${details["engine_temp"] ?: "0"}°C",
-                    color = Color.LightGray,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
-                )
-
-                Text(
-                    text = drivingStatus,
-                    color = if (drivingStatus.contains("위험")) G70Red else Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium
-                )
-
-                Text(
-                    text = climateAdvice,
-                    color = if (climateAdvice.contains("경고")) G70Red else Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+//            Column (
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Text(
+//                    text = "G70 Sport",
+//                    color = G70Red,
+//                    fontSize = 14.sp,
+//                    fontWeight = FontWeight.Black
+//                )
+//
+//                val currentRpm = details["rpm"]?.toIntOrNull() ?: 0
+//
+//                Row {
+//                    Text(
+//                        text = "${details["speed"] ?: 0} MPH",
+//                        color = Color.White,
+//                        fontSize = 50.sp,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//
+//                    Spacer(modifier = Modifier.width(20.dp))
+//
+//                    Text(
+//                        text = "$currentRpm RPM",
+//                        color = if (currentRpm >= 7000) G70Red else Color.White,
+//                        fontSize = 50.sp,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//                }
+//
+//                Text(
+//                    text = "현재 모드: ${details["drive_mode"] ?: "알 수 없음"}",
+//                    color = Color.White,
+//                    fontSize = 32.sp,
+//                    fontWeight = FontWeight.Bold
+//                )
+//
+//                Text(
+//                    text = "엔진온도: ${details["engine_temp"] ?: "0"}°C",
+//                    color = Color.LightGray,
+//                    fontSize = 14.sp,
+//                    fontWeight = FontWeight.Medium
+//                )
+//
+//                Text(
+//                    text = drivingStatus,
+//                    color = if (drivingStatus.contains("위험")) G70Red else Color.White,
+//                    fontSize = 14.sp,
+//                    fontWeight = FontWeight.Medium
+//                )
+//
+//                Text(
+//                    text = climateAdvice,
+//                    color = if (climateAdvice.contains("경고")) G70Red else Color.White,
+//                    fontSize = 14.sp,
+//                    fontWeight = FontWeight.Bold
+//                )
+//            }
         }
 
         Column (

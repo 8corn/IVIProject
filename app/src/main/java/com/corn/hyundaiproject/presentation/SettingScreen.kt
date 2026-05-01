@@ -29,12 +29,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiProjectTheme
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 
 @Composable
 fun SettingScreen(
-    carViewModel: CarViewModel,
+    carViewModel: CarViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
     val details by carViewModel.vehicleDetails.collectAsState()
