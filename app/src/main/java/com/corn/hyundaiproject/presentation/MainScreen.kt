@@ -32,7 +32,6 @@ import com.corn.hyundaiproject.presentation.ui.theme.CarbonBlack
 import com.corn.hyundaiproject.presentation.ui.theme.DeepGray
 import com.corn.hyundaiproject.presentation.ui.theme.G70Red
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
-import com.corn.hyundaiproject.presentation.viewModel.DashboardViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MediaViewModel
 
@@ -40,18 +39,18 @@ import com.corn.hyundaiproject.presentation.viewModel.MediaViewModel
 fun MainScreen(
     mainViewModel: MainViewModel = hiltViewModel(),
     mediaViewModel: MediaViewModel = hiltViewModel(),
-    dashboardViewModel: DashboardViewModel = hiltViewModel(),
     onSettingsClick: () -> Unit
 ) {
     val hvacState by mainViewModel.hvacState.collectAsState()
-    val drivingStatus by mainViewModel.drivingStatus.collectAsState()
-    val climateAdvice by mainViewModel.climateAdvice.collectAsState()
+//    val drivingStatus by mainViewModel.drivingStatus.collectAsState()
+//    val climateAdvice by mainViewModel.climateAdvice.collectAsState()
     val details by mainViewModel.vehicleDetails.collectAsState()
 
     val mediaState by mediaViewModel.mediaState.collectAsState()
 
-    val speed by dashboardViewModel.speed.collectAsState()
-    val rpm by dashboardViewModel.rpm.collectAsState()
+    val speed = details["speed"]?.toIntOrNull() ?: 0
+    val rpm = details["rpm"]?.toFloatOrNull() ?: 0f
+    val currentMode = details["drive_mode"] ?: "NORMAL"
 
     Row(
         modifier = Modifier
@@ -69,7 +68,8 @@ fun MainScreen(
         ) {
             DashboardWidget(
                 speed = speed,
-                rpm = rpm
+                rpm = rpm,
+                driveMode = currentMode
             )
 
 //            Column (

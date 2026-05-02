@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -412,22 +413,67 @@ fun getAlbumArt(title: String): Int {
 @Composable
 fun DashboardWidget(
     speed: Int,
-    rpm: Float
+    rpm: Float,
+    driveMode: String = "NORMAL"
 ) {
-    Box(
+    Row (
         modifier = Modifier
             .fillMaxSize()
-            .background(CarbonBlack, RoundedCornerShape(24.dp))
-            .padding(20.dp),
+            .background(CarbonBlack, RoundedCornerShape(28.dp))
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        GaugeComponent(
+            value = speed.toFloat(),
+            maxValue = 260f,
+            label = "MPH",
+            currentValueText = "$speed",
+            gaugeColor = Color.White
+        )
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = driveMode,
+                color = if (driveMode.contains("SPORT")) G70Red else Color.Cyan,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Black
+            )
+
+            Text(
+                text = "MODE",
+                color = Color.Gray,
+                fontSize = 12.sp
+            )
+        }
+
+        GaugeComponent(
+            value = rpm,
+            maxValue = 9000f,
+            label = "RPM",
+            currentValueText = "${rpm.toInt()}",
+            gaugeColor = if (rpm >= 7000) G70Red else Color.White
+        )
+    }
+}
+
+@Composable
+fun GaugeComponent(
+    value: Float,
+    maxValue: Float,
+    label: String,
+    currentValueText: String,
+    gaugeColor: Color
+) {
+    Box(
         contentAlignment = Alignment.Center
     ) {
         Canvas(
             modifier = Modifier
-                .size(250.dp)
+                .size(200.dp)
         ) {
-            val center = Offset(size.width / 2, size.height / 2)
-            val radius = size.width / 2
-
             drawArc(
                 color = Color.DarkGray,
                 startAngle = 135f,
@@ -436,9 +482,10 @@ fun DashboardWidget(
                 style = Stroke(width = 12.dp.toPx(), cap = StrokeCap.Round)
             )
 
-            val rpmSweep = (rpm / 7000f) * 270f
+            val rpmSweep = (value / maxValue).coerceIn(0f, 1f) * 270f
+
             drawArc(
-                color = G70Red,
+                color = gaugeColor,
                 startAngle = 135f,
                 sweepAngle = rpmSweep,
                 useCenter = false,
@@ -450,27 +497,16 @@ fun DashboardWidget(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "$speed",
-                style = TextStyle(
-                    color = Color.White,
-                    fontSize = 64.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-            )
-
-            Text(
-                text = "km/h",
-                color = Color.Gray,
-                fontSize = 18.sp
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                text = "RPM ${rpm.toInt()}",
-                color = G70Red,
-                fontSize = 14.sp,
+                text = currentValueText,
+                color = Color.White,
+                fontSize = 40.sp,
                 fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = label,
+                color = Color.Gray,
+                fontSize = 14.sp
             )
         }
     }
