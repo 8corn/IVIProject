@@ -44,7 +44,7 @@ class CarPropertyDataSource(context: Context) {
     val isDoorLocked: StateFlow<Boolean> = _isDoorLocked.asStateFlow()
 
     private val _vehicleDetails = MutableStateFlow(
-        mapOf("rpm" to "0", "drive_mode" to "NORMAL", "engine_temp" to "90.5")
+        mapOf("speed" to "0", "rpm" to "0", "drive_mode" to "NORMAL", "engine_temp" to "90.5")
     )
     val vehicleDetails: StateFlow<Map<String, String>> = _vehicleDetails.asStateFlow()
 
@@ -62,6 +62,7 @@ class CarPropertyDataSource(context: Context) {
             }
             VehiclePropertyIds.PERF_VEHICLE_SPEED -> {
                 val speed = value as Float
+                Log.d("G70_Native", "수신된 실제 속도: $speed")
                 _drivingStatus.value = checkDrivingStatus(speed)
 
                 val newDetails = getDetailedCarData(speed)

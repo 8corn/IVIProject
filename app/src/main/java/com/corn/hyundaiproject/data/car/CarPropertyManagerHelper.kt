@@ -173,7 +173,7 @@ class CarPropertyManagerHelper(
                         val success = propertyManager?.registerCallback(
                             propertyCallback,
                             id,
-                            5.0f
+                            CarPropertyManager.SENSOR_RATE_UI
                         )
                         Log.d("data/car/CarHelper", "ID $id (Area $areaId) 등록 결과: $success")
                     }
