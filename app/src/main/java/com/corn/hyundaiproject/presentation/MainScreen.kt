@@ -42,15 +42,20 @@ fun MainScreen(
     onSettingsClick: () -> Unit
 ) {
     val hvacState by mainViewModel.hvacState.collectAsState()
-//    val drivingStatus by mainViewModel.drivingStatus.collectAsState()
-//    val climateAdvice by mainViewModel.climateAdvice.collectAsState()
     val details by mainViewModel.vehicleDetails.collectAsState()
 
     val mediaState by mediaViewModel.mediaState.collectAsState()
 
+    val isLaneDeparture by mainViewModel.isLaneDeparture.collectAsState()
+    val forwardDistance by mainViewModel.forwardDistance.collectAsState()
+
     val speed = details["speed"]?.toIntOrNull() ?: 0
     val rpm = details["rpm"]?.toFloatOrNull() ?: 0f
     val currentMode = details["drive_mode"] ?: "NORMAL"
+
+    //    val drivingStatus by mainViewModel.drivingStatus.collectAsState()
+    //    val climateAdvice by mainViewModel.climateAdvice.collectAsState()
+
 
     Row(
         modifier = Modifier
@@ -69,7 +74,9 @@ fun MainScreen(
             DashboardWidget(
                 speed = speed,
                 rpm = rpm,
-                driveMode = currentMode
+                driveMode = currentMode,
+                isLaneDeparture = isLaneDeparture,
+                forwardDistance = forwardDistance,
             )
 
 //            Column (

@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.corn.hyundaiproject.data.repository.CarRepositoryImpl
 import com.corn.hyundaiproject.domain.usecase.GetTemperatureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -38,6 +40,12 @@ class MainViewModel @Inject constructor (
     val climateAdvice: StateFlow<String> = repository.climateAdvice
     val vehicleDetails: StateFlow<Map<String, String>> = repository.vehicleDetails
 
+    private val _forwardDistance = MutableStateFlow(50f)
+    val forwardDistance: StateFlow<Float> = _forwardDistance.asStateFlow()
+
+    private val _isLaneDeparture = MutableStateFlow(false)
+    val isLaneDeparture: StateFlow<Boolean> = _isLaneDeparture.asStateFlow()
+
     fun updateTemperature(delta: Float) {
         val currentTemp = hvacState.value.temperature
         val newTemp = currentTemp + delta
@@ -51,6 +59,11 @@ class MainViewModel @Inject constructor (
 
     fun toggleWindow() {
         println("창문 제어 명령 전송됨")
+    }
+
+    fun updateAdasData(distance: Float, departure: Boolean) {
+        _forwardDistance.value = distance
+        _isLaneDeparture.value = departure
     }
 }
 

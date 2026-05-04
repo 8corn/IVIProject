@@ -45,13 +45,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Canvas
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -414,7 +414,9 @@ fun getAlbumArt(title: String): Int {
 fun DashboardWidget(
     speed: Int,
     rpm: Float,
-    driveMode: String = "NORMAL"
+    driveMode: String = "NORMAL",
+    isLaneDeparture: Boolean,
+    forwardDistance: Float,
 ) {
     Row (
         modifier = Modifier
@@ -446,6 +448,12 @@ fun DashboardWidget(
                 text = "MODE",
                 color = Color.Gray,
                 fontSize = 12.sp
+            )
+
+            AdasWidget(
+                isLaneDeparture = isLaneDeparture,
+                forwardDistance = forwardDistance,
+                isObjectDetected = true
             )
         }
 
@@ -507,6 +515,61 @@ fun GaugeComponent(
                 text = label,
                 color = Color.Gray,
                 fontSize = 14.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun AdasWidget(
+    isLaneDeparture: Boolean,
+    forwardDistance: Float,
+    isObjectDetected: Boolean
+) {
+    Box(
+        modifier = Modifier
+            .size(200.dp, 150.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            val width = size.width
+            val height = size.height
+
+            val laneColor = if (isLaneDeparture) G70Red else Color.Gray
+            val path = Path().apply {
+                moveTo(width * 0.2f, height)
+                lineTo(width * 0.45f, height * 0.4f)
+                moveTo(width * 0.8f, height)
+                lineTo(width * 0.55f, height * 0.4f)
+            }
+
+            drawPath(
+                path = path,
+                color = laneColor,
+                style = Stroke(width = 4.dp.toPx(), cap = StrokeCap.Round)
+            )
+
+            if (isObjectDetected) {
+                val distanceAlpha = (1f - (forwardDistance / 100f)).coerceIn(0.3f, 1f)
+                drawRect(
+                    color = if (forwardDistance < 20f) G70Red else Color.White.copy(alpha = distanceAlpha),
+                    size = Size(width * 0.2f, height * 0.15f),
+                    topLeft = Offset(width * 0.4f, height * 0.35f)
+                )
+            }
+        }
+
+        if (isObjectDetected) {
+            Text(
+                text = "${forwardDistance.toInt()}m",
+                color = if (forwardDistance < 20f) G70Red else Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
             )
         }
     }
