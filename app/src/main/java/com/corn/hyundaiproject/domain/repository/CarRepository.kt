@@ -8,6 +8,8 @@ interface CarRepository {
     val climateAdvice: StateFlow<String>
     val isDoorLocked: StateFlow<Boolean>
     val vehicleDetails: StateFlow<Map<String, String>>
+    val forwardDistance: StateFlow<Float>
+    val isLaneDeparture: StateFlow<Boolean>
 
     fun setTemperature(temp: Float)
     fun setDoorLock(lock: Boolean)

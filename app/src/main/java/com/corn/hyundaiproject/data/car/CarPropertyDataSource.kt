@@ -48,6 +48,12 @@ class CarPropertyDataSource(context: Context) {
     )
     val vehicleDetails: StateFlow<Map<String, String>> = _vehicleDetails.asStateFlow()
 
+    private val _forwardDistance = MutableStateFlow(50f)
+    val forwardDistance: StateFlow<Float> = _forwardDistance.asStateFlow()
+
+    private val _isLaneDeparture = MutableStateFlow(false)
+    val isLaneDeparture: StateFlow<Boolean> = _isLaneDeparture.asStateFlow()
+
     // Helper를 생성하면서 콜백(람다)을 전달
     // Helper에서 onTemperatureChanged(temp)를 호출하면 이 블록이 실행됨
     private val helper = CarPropertyManagerHelper(context) { propertyId, value ->
@@ -69,6 +75,10 @@ class CarPropertyDataSource(context: Context) {
                 _vehicleDetails.value = LinkedHashMap(newDetails)
 
                 Log.d("G70_Native", "속도: ${checkDrivingStatus(speed)}, 상시 데이터: ${_vehicleDetails.value}")
+
+                // ADAS 데이터 업데이트
+                _forwardDistance.value = (100f - speed).coerceAtLeast(10f)
+                _isLaneDeparture.value = speed > 120f
             }
             VehiclePropertyIds.GEAR_SELECTION -> {
                 currentGear = value as Int
