@@ -24,6 +24,7 @@ class CarPropertyDataSource(context: Context) {
     private external fun checkFuelStatus(fuelLevel: Float): String
     private external fun isHazardous(gear: Int, isDoorOpen: Boolean): Boolean
     private external fun getDetailedCarData(speed: Float): Map<String, String>
+    private external fun getAdasDistanceNative(rawDistanceData: Float): Float
 
     // 상태 저장용 변수 (상태 판단을 위해 필요)
     private var currentGear: Int = 0
@@ -109,6 +110,18 @@ class CarPropertyDataSource(context: Context) {
                 } else {
                     Log.d("G70_Native", "헤드라이트가 꺼집니다.")
                 }
+            }
+            0x21400101 -> {
+                // 전방 거리
+                val distance = value as? Float ?: 0f
+                val refinedDistance = getAdasDistanceNative(distance)
+                _forwardDistance.value = refinedDistance
+            }
+            0x21400102 -> {
+                // 차선 이탈 (시뮬레이터가 0 또는 1을 준다고 가정)
+                val departure = value as? Int ?: 0
+                val refinedDeparture = getAdasDistanceNative(departure.toFloat())
+                _isLaneDeparture.value = (refinedDeparture == 0.5f)
             }
         }
     }

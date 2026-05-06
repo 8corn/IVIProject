@@ -118,3 +118,11 @@ Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getDetailedCarData(
 
     return hashMap;
 }
+
+// 에뮬레이터에서 받은 거리 데이터를 가공하는 함수
+extern "C" JNIEXPORT jfloat JNICALL
+Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getAdasDistanceNative(
+        JNIEnv* env, jobject thiz, jfloat raw_sensor_data) {
+    if (raw_sensor_data < 0) return 0.0f;
+    return raw_sensor_data;
+}

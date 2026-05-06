@@ -85,6 +85,17 @@ class CarPropertyManagerHelper(
                     val data = (rawValue as? Array<*>)?.contentDeepToString() ?: rawValue.toString()
                     Log.d("data/car/CarHelper", "EV 배터리: $data")
                 }
+
+                // 전방 거리 데이터
+                0x21400101 -> {
+                    onTemperatureChanged(propertyId, rawValue)
+                    Log.d("data/car/CarHelper", "ADAS 거리 수신: $rawValue")
+                }
+                // 차선 이탈 데이터
+                0x21400102 -> {
+                    onTemperatureChanged(propertyId, rawValue)
+                    Log.d("data/car/CarHelper", "ADAS 차선이탈 수신: $rawValue")
+                }
             }
         }
 
@@ -162,8 +173,13 @@ class CarPropertyManagerHelper(
             291570965,
         )
 
+        val adasProps = listOf(
+            0x21400101,
+            0x21400102,
+        )
+
         // 지원되는 속성만 필터링해서 등록
-        fun registerSafety(idList: List<Int>, rate: Int) {
+        fun registerSafety(idList: List<Int>, rate: Float) {
             idList.forEach { id ->
                 if (available.contains(id)) {
                     val config = propertyManager?.getCarPropertyConfig(id)
@@ -185,12 +201,17 @@ class CarPropertyManagerHelper(
 
         registerSafety(
             onchangeProps,
-            CarPropertyManager.SENSOR_RATE_ONCHANGE.toInt()
+            CarPropertyManager.SENSOR_RATE_ONCHANGE
         )
 
         registerSafety(
             normalProps,
-            CarPropertyManager.SENSOR_RATE_NORMAL.toInt()
+            CarPropertyManager.SENSOR_RATE_NORMAL
+        )
+
+        registerSafety(
+            adasProps,
+            CarPropertyManager.SENSOR_RATE_UI
         )
     }
 
