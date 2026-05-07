@@ -1,6 +1,8 @@
 package com.corn.hyundaiproject.presentation.viewModel
 
+import android.content.ComponentName
 import android.content.Context
+import android.util.Log
 import androidx.annotation.OptIn
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +12,11 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.RawResourceDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
 import com.corn.hyundaiproject.R
+import com.google.common.util.concurrent.ListenableFuture
+import com.google.common.util.concurrent.MoreExecutors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
@@ -41,13 +47,57 @@ class MediaViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) : ViewModel() {
     private var exoPlayer: ExoPlayer? = null
+    private var controllerFuture: ListenableFuture<MediaController>? = null
+    private val mediaController: MediaController?
+        get() = if (controllerFuture?.isDone == true) controllerFuture?.get() else null
     private val _mediaState = MutableStateFlow(MediaState())
     val mediaState: StateFlow<MediaState> = _mediaState.asStateFlow()
 
     init {
-        setupPlayer()
+//        setupPlayer()
+        setupMediaController()
         updateProgress()
     }
+
+    private fun setupMediaController() {
+        viewModelScope.launch {
+            try {
+                val componentName = ComponentName(
+                    "com.android.bluetooth",
+                    "com.android.bluetooth.avrcpcontroller.BluetoothMediaBrowserService"
+                )
+                val sessionToken = try {
+                    SessionToken(context, componentName)
+                } catch (e: IllegalArgumentException) {
+                    Log.e("MediaViewModel", "블루투스 서비스를 찾을 수 없습니다: ${e.message}")
+                    null
+                }
+
+                sessionToken?.let { token ->
+                    controllerFuture = MediaController.Builder(context, token).buildAsync()
+                    controllerFuture?.addListener({
+                        val controller = mediaController ?: return@addListener
+
+                        controller.addListener(object : Player.Listener {
+                            override fun onMediaMetadataChanged(metadata: MediaMetadata) {
+                                _mediaState.value = _mediaState.value.copy(
+                                    title = metadata.title?.toString() ?: "Unknown",
+                                    artist = metadata.artist?.toString() ?: "Unknown artist"
+                                )
+                            }
+
+                            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                                _mediaState.value = _mediaState.value.copy(isPlaying = isPlaying)
+                            }
+                        })
+                    }, MoreExecutors.directExecutor())
+                }
+            } catch (e: Exception) {
+                Log.e("MediaViewModel", "MediaController 설정 중 예상치 못한 오류: ${e.message}")
+            }
+        }
+    }
+
 
     @OptIn(UnstableApi::class)
     private fun setupPlayer() {
@@ -77,7 +127,7 @@ class MediaViewModel @Inject constructor(
     private fun updateProgress() {
         viewModelScope.launch {
             while (true) {
-                exoPlayer?.let { player ->
+                mediaController?.let { player ->
                     val currentPos = player.currentPosition
                     val duration = player.duration.coerceAtLeast(10L)
 
@@ -92,27 +142,51 @@ class MediaViewModel @Inject constructor(
                         )
                     }
                 }
+//                exoPlayer?.let { player ->
+//                    val currentPos = player.currentPosition
+//                    val duration = player.duration.coerceAtLeast(10L)
+//
+//                    if (duration > 0) {
+//                        val progress = currentPos.toFloat() / duration.toFloat()
+//
+//                        _mediaState.value = _mediaState.value.copy(
+//                            progress = progress,
+//                            currentTime = formatTime((currentPos / 1000).toInt()),
+//                            totalTime = formatTime((duration / 1000).toInt()),
+//                            isPlaying = player.isPlaying
+//                        )
+//                    }
+//                }
                 delay(500)
             }
         }
     }
 
     fun togglePlay() {
-        exoPlayer?.let {
-            if (it.isPlaying) {
+        mediaController?.let {
+            if (it.isPlaying)
                 it.pause()
-                _mediaState.value = _mediaState.value.copy(isPlaying = false)
-            } else {
+            else
                 it.play()
-                _mediaState.value = _mediaState.value.copy(isPlaying = true)
-            }
         }
+//        exoPlayer?.let {
+//            if (it.isPlaying) {
+//                it.pause()
+//                _mediaState.value = _mediaState.value.copy(isPlaying = false)
+//            } else {
+//                it.play()
+//                _mediaState.value = _mediaState.value.copy(isPlaying = true)
+//            }
+//        }
     }
 
     override fun onCleared() {
         super.onCleared()
-        exoPlayer?.release()
-        exoPlayer = null
+        controllerFuture?.let {
+            MediaController.releaseFuture(it)
+        }
+//        exoPlayer?.release()
+//        exoPlayer = null
     }
 
     @OptIn(UnstableApi::class)
@@ -130,12 +204,14 @@ class MediaViewModel @Inject constructor(
     }
 
     fun skipToNext() {
-        exoPlayer?.seekToNext()
-        exoPlayer?.play()
+        mediaController?.seekToNext()
+//        exoPlayer?.seekToNext()
+//        exoPlayer?.play()
     }
 
     fun skipToPrepare() {
-        exoPlayer?.seekToPrevious()
-        exoPlayer?.play()
+        mediaController?.seekToPrevious()
+//        exoPlayer?.seekToPrevious()
+//        exoPlayer?.play()
     }
 }
