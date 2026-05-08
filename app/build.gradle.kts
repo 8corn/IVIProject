@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.compileOnly
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -68,6 +70,9 @@ dependencies {
     ksp(libs.hilt.android.compiler)
 
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.androidx.app)
+    compileOnly(files("/Users/corn/Library/Android/sdk/platforms/android-35/optional/android.car.jar"))
 
     // AAOS 앱 개발을 위한 Jetpack 라이브러리
     implementation(libs.androidx.app.automotive)

@@ -429,7 +429,7 @@ fun DashboardWidget(
         GaugeComponent(
             value = speed.toFloat(),
             maxValue = 260f,
-            label = "MPH",
+            label = "Km/H",
             currentValueText = "$speed",
             gaugeColor = Color.White
         )

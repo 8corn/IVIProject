@@ -15,6 +15,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.corn.hyundaiproject.R
+import com.corn.hyundaiproject.data.repository.CarRepositoryImpl
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +35,7 @@ data class MediaState(
     val progress: Float = 0.3f,
     val currentTime: String = "01:24",
     val totalTime: String = "03:45",
+    val vehicleSpeed: Float = 0f,
 )
 
 private fun formatTime(seconds: Int): String {
@@ -44,7 +46,8 @@ private fun formatTime(seconds: Int): String {
 
 @HiltViewModel
 class MediaViewModel @Inject constructor(
-    @param:ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context,
+    private val repository: CarRepositoryImpl
 ) : ViewModel() {
     private var exoPlayer: ExoPlayer? = null
     private var controllerFuture: ListenableFuture<MediaController>? = null
@@ -55,6 +58,7 @@ class MediaViewModel @Inject constructor(
 
     init {
 //        setupPlayer()
+        setupCarApi()
         setupMediaController()
         updateProgress()
     }
@@ -124,6 +128,27 @@ class MediaViewModel @Inject constructor(
         }
     }
 
+    private fun setupCarApi() {
+        viewModelScope.launch {
+            launch {
+                repository.vehicleDetails.collect { details ->
+                    val speed = details["speed"]?.toFloatOrNull() ?: 0f
+                    val rpm = details["rpm"]?.toFloatOrNull() ?: 0f
+
+                    _mediaState.value = _mediaState.value.copy(vehicleSpeed = speed)
+
+                    Log.d("MediaViewModel", "데이터 수신 - 속도: $speed, RPM: $rpm")
+                }
+            }
+
+            launch {
+                repository.drivingStatus.collect { status ->
+                    Log.d("MediaViewModel", "현재 주행 상태: $status")
+                }
+            }
+        }
+    }
+
     private fun updateProgress() {
         viewModelScope.launch {
             while (true) {
@@ -185,6 +210,7 @@ class MediaViewModel @Inject constructor(
         controllerFuture?.let {
             MediaController.releaseFuture(it)
         }
+        repository.closeConnection()
 //        exoPlayer?.release()
 //        exoPlayer = null
     }
