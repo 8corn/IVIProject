@@ -34,7 +34,7 @@ object CarModule {
     @Provides
     @Singleton
     fun provideGetTemperatureUseCase(
-        repository: CarRepositoryImpl
+        repository: CarRepository
     ): GetTemperatureUseCase {
         return GetTemperatureUseCase(repository)
     }
