@@ -3,6 +3,7 @@ package com.corn.hyundaiproject.di
 import android.content.Context
 import com.corn.hyundaiproject.data.car.CarPropertyDataSource
 import com.corn.hyundaiproject.data.repository.CarRepositoryImpl
+import com.corn.hyundaiproject.domain.repository.CarRepository
 import com.corn.hyundaiproject.domain.usecase.GetTemperatureUseCase
 import dagger.Module
 import dagger.Provides
@@ -26,7 +27,7 @@ object CarModule {
     @Singleton
     fun provideCarRepository(
         dataSource: CarPropertyDataSource
-    ): CarRepositoryImpl {
+    ): CarRepository {
         return CarRepositoryImpl(dataSource)
     }
 
