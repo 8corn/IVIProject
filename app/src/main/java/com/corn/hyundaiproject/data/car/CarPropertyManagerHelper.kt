@@ -88,13 +88,29 @@ class CarPropertyManagerHelper(
 
                 // 전방 거리 데이터
                 0x21400101 -> {
-                    onTemperatureChanged(propertyId, rawValue)
-                    Log.d("data/car/CarHelper", "ADAS 거리 수신: $rawValue")
+                    val data = rawValue as? FloatArray
+                    if (data != null && data.isNotEmpty()) {
+                        val distance = data[0]
+                        onTemperatureChanged(propertyId, distance)
+                        Log.d("data/car/CarHelper", "ADAS 거리 수신: $distance m")
+
+                        if (distance < 5.0f) {
+                            Log.w("data/car/CarHelper", "충돌 위험 경고")
+                        }
+                    }
                 }
                 // 차선 이탈 데이터
                 0x21400102 -> {
-                    onTemperatureChanged(propertyId, rawValue)
-                    Log.d("data/car/CarHelper", "ADAS 차선이탈 수신: $rawValue")
+                    val status = rawValue as? Int ?: 0
+                    onTemperatureChanged(propertyId, status)
+
+                    val statusText = when(status) {
+                        1 -> "왼쪽 차선 이탈"
+                        2 -> "오른쪽 차선 이탈"
+                        else -> "정상 주행"
+                    }
+
+                    Log.d("data/car/CarHelper", "ADAS 차선 상태: $statusText")
                 }
             }
         }

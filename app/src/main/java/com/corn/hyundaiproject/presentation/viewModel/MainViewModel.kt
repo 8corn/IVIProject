@@ -2,22 +2,19 @@ package com.corn.hyundaiproject.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.corn.hyundaiproject.data.repository.CarRepositoryImpl
+import com.corn.hyundaiproject.domain.repository.CarRepository
 import com.corn.hyundaiproject.domain.usecase.GetTemperatureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor (
     private val getTemperatureUseCase: GetTemperatureUseCase,
-    private val repository: CarRepositoryImpl
+    private val repository: CarRepository
 ) : ViewModel() {
     // Repository의 Float 데이터를 HvacState 객체로 변환해서 UI에 노출
     // collectAsState를 편하게 쓰기 위해 StateFlow를 변환하는 로직
