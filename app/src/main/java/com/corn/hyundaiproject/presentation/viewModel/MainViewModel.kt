@@ -28,6 +28,8 @@ class MainViewModel @Inject constructor (
         repository.drivingStatus,
         repository.vehicleDetails,
     ) { hvacInfo, distance, isDeparture, status, details ->
+        Log.d("JARVIS", "수신된 맵 데이터: $details")
+
         // 상황 판단 로직
         val safetyLevel = when {
             isDeparture || distance < 5.0f -> SafetyLevel.DANGER
@@ -51,7 +53,8 @@ class MainViewModel @Inject constructor (
             isLaneDeparture = isDeparture,
             safetyLevel = safetyLevel,
             warningMessage = distanceMessage,
-            speed = details["speed"] ?: "0"
+            speed = details["speed"] ?: "0",
+            rpm = details["rpm"]?.toFloatOrNull() ?: 0f
         )
     }.stateIn(
         scope = viewModelScope,
@@ -82,7 +85,8 @@ data class IntegratedCarState(
     val isLaneDeparture: Boolean = false,
     val safetyLevel: SafetyLevel = SafetyLevel.SAFE,
     val warningMessage: String = "",
-    val speed: String = "0"
+    val speed: String = "0",
+    val rpm: Float = 0f
 )
 
 enum class SafetyLevel { SAFE, CAUTION, DANGER }

@@ -45,7 +45,7 @@ fun MainScreen(
     val mediaState by mediaViewModel.mediaState.collectAsState()
 
     val speed = uiState.speed.toIntOrNull() ?: 0
-    val rpm = 0f
+    val rpm = uiState.rpm
     val currentMode = uiState.drivingStatus
 
     //    val drivingStatus by mainViewModel.drivingStatus.collectAsState()
