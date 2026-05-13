@@ -41,17 +41,12 @@ fun MainScreen(
     mediaViewModel: MediaViewModel = hiltViewModel(),
     onSettingsClick: () -> Unit
 ) {
-    val hvacState by mainViewModel.hvacState.collectAsState()
-    val details by mainViewModel.vehicleDetails.collectAsState()
-
+    val uiState by mainViewModel.uiState.collectAsState()
     val mediaState by mediaViewModel.mediaState.collectAsState()
 
-    val isLaneDeparture by mainViewModel.isLaneDeparture.collectAsState()
-    val forwardDistance by mainViewModel.forwardDistance.collectAsState()
-
-    val speed = details["speed"]?.toIntOrNull() ?: 0
-    val rpm = details["rpm"]?.toFloatOrNull() ?: 0f
-    val currentMode = details["drive_mode"] ?: "NORMAL"
+    val speed = uiState.speed.toIntOrNull() ?: 0
+    val rpm = 0f
+    val currentMode = uiState.drivingStatus
 
     //    val drivingStatus by mainViewModel.drivingStatus.collectAsState()
     //    val climateAdvice by mainViewModel.climateAdvice.collectAsState()
@@ -75,68 +70,9 @@ fun MainScreen(
                 speed = speed,
                 rpm = rpm,
                 driveMode = currentMode,
-                isLaneDeparture = isLaneDeparture,
-                forwardDistance = forwardDistance,
+                isLaneDeparture = uiState.isLaneDeparture,
+                forwardDistance = uiState.forwardDistance,
             )
-
-//            Column (
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Text(
-//                    text = "G70 Sport",
-//                    color = G70Red,
-//                    fontSize = 14.sp,
-//                    fontWeight = FontWeight.Black
-//                )
-//
-//                val currentRpm = details["rpm"]?.toIntOrNull() ?: 0
-//
-//                Row {
-//                    Text(
-//                        text = "${details["speed"] ?: 0} MPH",
-//                        color = Color.White,
-//                        fontSize = 50.sp,
-//                        fontWeight = FontWeight.Bold
-//                    )
-//
-//                    Spacer(modifier = Modifier.width(20.dp))
-//
-//                    Text(
-//                        text = "$currentRpm RPM",
-//                        color = if (currentRpm >= 7000) G70Red else Color.White,
-//                        fontSize = 50.sp,
-//                        fontWeight = FontWeight.Bold
-//                    )
-//                }
-//
-//                Text(
-//                    text = "현재 모드: ${details["drive_mode"] ?: "알 수 없음"}",
-//                    color = Color.White,
-//                    fontSize = 32.sp,
-//                    fontWeight = FontWeight.Bold
-//                )
-//
-//                Text(
-//                    text = "엔진온도: ${details["engine_temp"] ?: "0"}°C",
-//                    color = Color.LightGray,
-//                    fontSize = 14.sp,
-//                    fontWeight = FontWeight.Medium
-//                )
-//
-//                Text(
-//                    text = drivingStatus,
-//                    color = if (drivingStatus.contains("위험")) G70Red else Color.White,
-//                    fontSize = 14.sp,
-//                    fontWeight = FontWeight.Medium
-//                )
-//
-//                Text(
-//                    text = climateAdvice,
-//                    color = if (climateAdvice.contains("경고")) G70Red else Color.White,
-//                    fontSize = 14.sp,
-//                    fontWeight = FontWeight.Bold
-//                )
-//            }
         }
 
         Column (
@@ -145,9 +81,9 @@ fun MainScreen(
                 .fillMaxHeight(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            hvacState.warningMessage?.let { message ->
+            if (uiState.warningMessage.isNotEmpty()) {
                 Text(
-                    text = message,
+                    text = uiState.warningMessage,
                     color = G70Red,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
@@ -157,7 +93,7 @@ fun MainScreen(
             }
 
             HvacWidget(
-                hvacState.temperature,
+                uiState.temperature,
                 onIncrease = {
                     mainViewModel.updateTemperature(0.5f)
                 },
@@ -167,7 +103,7 @@ fun MainScreen(
             )
 
             ControlWidget(
-                isLocked = hvacState.isDoorLocked,
+                isLocked = uiState.isDoorLocked,
                 onLockClick = {
                     mainViewModel.toggleDoorLock()
                 },
@@ -183,15 +119,9 @@ fun MainScreen(
             ) {
                 MediaWidget(
                     state = mediaState,
-                    onPlayPause = {
-                        mediaViewModel.togglePlay()
-                    },
-                    onSkipForward = {
-                        mediaViewModel.skipToNext()
-                    },
-                    onSkipBackward = {
-                        mediaViewModel.skipToPrepare()
-                    },
+                    onPlayPause = { mediaViewModel.togglePlay() },
+                    onSkipForward = { mediaViewModel.skipToNext() },
+                    onSkipBackward = { mediaViewModel.skipToPrepare() },
                     onSettingsClick = onSettingsClick
                 )
             }
