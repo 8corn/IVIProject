@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor (
         repository.drivingStatus,
         repository.vehicleDetails,
     ) { hvacInfo, distance, isDeparture, status, details ->
-        Log.d("JARVIS", "수신된 맵 데이터: $details")
+        Log.d("MainViewModel", "수신된 맵 데이터: $details")
 
         // 상황 판단 로직
         val safetyLevel = when {

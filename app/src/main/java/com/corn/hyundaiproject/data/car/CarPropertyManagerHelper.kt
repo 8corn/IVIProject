@@ -194,21 +194,15 @@ class CarPropertyManagerHelper(
             0x21400102,
         )
 
-        // 지원되는 속성만 필터링해서 등록
         fun registerSafety(idList: List<Int>, rate: Float) {
             idList.forEach { id ->
                 if (available.contains(id)) {
-                    val config = propertyManager?.getCarPropertyConfig(id)
-                    val areaIds = config?.areaIds ?: intArrayOf(0)
-
-                    areaIds.forEach { areaId ->
-                        val success = propertyManager?.registerCallback(
-                            propertyCallback,
-                            id,
-                            CarPropertyManager.SENSOR_RATE_UI
-                        )
-                        Log.d("data/car/CarHelper", "ID $id (Area $areaId) 등록 결과: $success")
-                    }
+                    val success = propertyManager?.registerCallback(
+                        propertyCallback,
+                        id,
+                        rate
+                    )
+                    Log.d("data/car/CarHelper", "ID $id 등록 결과: $success, Rate: $rate")
                 } else {
                     Log.w("data/car/CarHelper", "지원되지 않는 속성 무시됨: $id")
                 }

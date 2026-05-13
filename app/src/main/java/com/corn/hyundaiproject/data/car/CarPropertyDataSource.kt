@@ -60,16 +60,12 @@ class CarPropertyDataSource(context: Context) {
     // Helper를 생성하면서 콜백(람다)을 전달
     // Helper에서 onTemperatureChanged(temp)를 호출하면 이 블록이 실행됨
     private val helper = CarPropertyManagerHelper(context) { propertyId, value ->
-
-        Log.d("G70_CHECK", "뭐라도 들어온다! ID: $propertyId, Value: $value")
-
         when (propertyId) {
             VehiclePropertyIds.HVAC_TEMPERATURE_SET -> {
                 val temp = value as Float
                 _temperature.value = temp
 
                 _drivingStatus.value = checkDrivingStatus(80f)
-                Log.d("G70_Check", "테스트용 강제 속도 업데이트 실행")
 
                 _climateAdvice.value = getClimateAdvice(currentExteriorTemp, temp)
             }
