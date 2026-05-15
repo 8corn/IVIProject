@@ -45,6 +45,10 @@ class CarPropertyManagerHelper(
                     onTemperatureChanged(propertyId, rawValue)
                     Log.d("data/car/CarHelper", "실시간 속도: $rawValue km/h")
                 }
+                291504648 -> {
+                    onTemperatureChanged(propertyId, rawValue)
+                    Log.d("data/car/CarHelper", "계기판 표시 속도: $rawValue km/h")
+                }
                 VehiclePropertyIds.GEAR_SELECTION -> Log.d("data/car/CarHelper", "현재 기어: $rawValue")
                 VehiclePropertyIds.NIGHT_MODE -> Log.d("data/car/CarHelper", "야간 모드 상태: $rawValue")
                 VehiclePropertyIds.FUEL_LEVEL -> Log.d("data/car/CarHelper", "연료 잔량: $rawValue")
@@ -182,6 +186,7 @@ class CarPropertyManagerHelper(
         val normalProps = listOf(
             VehiclePropertyIds.ENV_OUTSIDE_TEMPERATURE,
             VehiclePropertyIds.PERF_VEHICLE_SPEED,
+            291504648,
             VehiclePropertyIds.FUEL_LEVEL,
             291504390,
             356516106,
