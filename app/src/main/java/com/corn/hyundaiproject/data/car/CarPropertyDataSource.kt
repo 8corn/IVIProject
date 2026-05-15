@@ -159,26 +159,26 @@ class CarPropertyDataSource(context: Context) {
         helper.release()
     }
 
-    // 클래스터 테스트
-    init {
-        val handler = Handler(Looper.getMainLooper())
-        var fakeSpeed = 0f
-
-        handler.post(object : Runnable {
-            override fun run() {
-                fakeSpeed += 5f
-                if (fakeSpeed > 200f) fakeSpeed = 0f
-
-                val newDetails = getDetailedCarData(fakeSpeed)
-
-                _vehicleDetails.value = LinkedHashMap(newDetails)
-                _drivingStatus.value = checkDrivingStatus(fakeSpeed)
-                _forwardDistance.value = (100f - fakeSpeed).coerceAtLeast(10f)
-
-                Log.d("G70_PUMP", "펌프질 - Speed: $fakeSpeed, RPM: ${newDetails["rpm"]}")
-
-                handler.postDelayed(this, 500)
-            }
-        })
-    }
+//    // 클래스터 테스트
+//    init {
+//        val handler = Handler(Looper.getMainLooper())
+//        var fakeSpeed = 0f
+//
+//        handler.post(object : Runnable {
+//            override fun run() {
+//                fakeSpeed += 5f
+//                if (fakeSpeed > 200f) fakeSpeed = 0f
+//
+//                val newDetails = getDetailedCarData(fakeSpeed)
+//
+//                _vehicleDetails.value = LinkedHashMap(newDetails)
+//                _drivingStatus.value = checkDrivingStatus(fakeSpeed)
+//                _forwardDistance.value = (100f - fakeSpeed).coerceAtLeast(10f)
+//
+//                Log.d("G70_PUMP", "펌프질 - Speed: $fakeSpeed, RPM: ${newDetails["rpm"]}")
+//
+//                handler.postDelayed(this, 500)
+//            }
+//        })
+//    }
 }
