@@ -46,10 +46,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +63,8 @@ import com.corn.hyundaiproject.presentation.ui.theme.DeepGray
 import com.corn.hyundaiproject.presentation.ui.theme.G70Red
 import com.corn.hyundaiproject.presentation.viewModel.MediaState
 import java.util.Locale
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Composable
 fun HvacWidget(
@@ -431,24 +435,35 @@ fun DashboardWidget(
             maxValue = 260f,
             label = "Km/H",
             currentValueText = "$speed",
-            gaugeColor = Color.White
+            isRpmGauge = false,
+            driveMode = driveMode
         )
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .width(220.dp)
         ) {
             Text(
-                text = driveMode,
-                color = if (driveMode.contains("SPORT")) G70Red else Color.Cyan,
-                fontSize = 20.sp,
+                text = driveMode.uppercase(Locale.getDefault()),
+                color = when {
+                    driveMode.contains("SPORT") -> G70Red
+                    driveMode.contains("ECO") -> Color(0xFF00C853)
+                    else -> Color(0xFF00B0FF)
+                },
+                fontSize = 22.sp,
                 fontWeight = FontWeight.Black
             )
 
             Text(
-                text = "MODE",
-                color = Color.Gray,
-                fontSize = 12.sp
+                text = "DRIVE MODE",
+                color = Color.DarkGray,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
 
             AdasWidget(
                 isLaneDeparture = isLaneDeparture,
@@ -459,10 +474,11 @@ fun DashboardWidget(
 
         GaugeComponent(
             value = rpm,
-            maxValue = 9000f,
+            maxValue = 8000f,
             label = "RPM",
-            currentValueText = "${rpm.toInt()}",
-            gaugeColor = if (rpm >= 7000) G70Red else Color.White
+            currentValueText = (rpm / 1000f).let { String.format(Locale.getDefault(), "%.1f", it) },
+            isRpmGauge = true,
+            driveMode = driveMode
         )
     }
 }
@@ -473,32 +489,90 @@ fun GaugeComponent(
     maxValue: Float,
     label: String,
     currentValueText: String,
-    gaugeColor: Color
+    isRpmGauge: Boolean,
+    driveMode: String,
 ) {
+    val isSport = driveMode.contains("SPORT")
+    val isRedZone = isRpmGauge && value >= 6500f
+
+    val activeGaugeColor = when {
+        isRedZone -> G70Red
+        isSport -> G70Red
+        driveMode.contains("ECO") -> Color(0xFF00C853)
+        else -> Color.White
+    }
+
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(220.dp)
     ) {
         Canvas(
             modifier = Modifier
-                .size(200.dp)
+                .fillMaxSize()
         ) {
+            val center = Offset(size.width / 2, size.height / 2)
+            val strokeWidthPx = 10.dp.toPx()
+            val radius = (size.width - strokeWidthPx) / 2
+
             drawArc(
-                color = Color.DarkGray,
+                color = Color(0xFF1F1F1F),
                 startAngle = 135f,
                 sweepAngle = 270f,
                 useCenter = false,
-                style = Stroke(width = 12.dp.toPx(), cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round)
             )
 
-            val rpmSweep = (value / maxValue).coerceIn(0f, 1f) * 270f
+            val sweepAngle = (value / maxValue).coerceIn(0f, 1f) * 270f
 
-            drawArc(
-                color = gaugeColor,
-                startAngle = 135f,
-                sweepAngle = rpmSweep,
-                useCenter = false,
-                style = Stroke(width = 12.dp.toPx(), cap = StrokeCap.Round)
-            )
+            val brush = if (isSport || isRedZone) {
+                Brush.sweepGradient(
+                    0.0f to Color.Yellow,
+                    0.5f to G70Red,
+                    1.0f to G70Red,
+                    center = center
+                )
+            } else {
+                Brush.linearGradient(colors = listOf(activeGaugeColor, activeGaugeColor))
+            }
+
+            rotate(degrees = 0f, pivot = center) {
+                drawArc(
+                    brush = brush,
+                    startAngle = 135f,
+                    sweepAngle = sweepAngle,
+                    useCenter = false,
+                    style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round)
+                )
+            }
+
+            val tickCount = 21
+            for (i in 0 until tickCount) {
+                val tickAngle = 135f + (i * (270f / (tickCount - 1)))
+                val angleRad = Math.toRadians(tickAngle.toDouble())
+
+                val isTickRedZone = isRpmGauge && (i >= tickCount * 0.8)
+                val tickColor = when {
+                    isTickRedZone -> G70Red
+                    tickAngle <= 135f + sweepAngle -> activeGaugeColor.copy(alpha = 0.9f)
+                    else -> Color.DarkGray.copy(alpha = 0.5f)
+                }
+
+                val innerRadius = radius - 12.dp.toPx()
+                val outerRadius = radius - 4.dp.toPx()
+
+                val startX = center.x + innerRadius * cos(angleRad).toFloat()
+                val startY = center.y + innerRadius * sin(angleRad).toFloat()
+                val endX = center.x + outerRadius * cos(angleRad).toFloat()
+                val endY = center.y + outerRadius * sin(angleRad).toFloat()
+
+                drawLine(
+                    color = tickColor,
+                    start = Offset(startX, startY),
+                    end = Offset(endX, endY),
+                    strokeWidth = 2.dp.toPx()
+                )
+            }
         }
 
         Column(
@@ -506,15 +580,18 @@ fun GaugeComponent(
         ) {
             Text(
                 text = currentValueText,
-                color = Color.White,
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold
+                color = if (isRedZone) G70Red else Color.White,
+                fontSize = if (isRpmGauge) 46.sp else 52.sp,
+                fontWeight = FontWeight.Black,
+                letterSpacing = (-1).sp
             )
 
             Text(
-                text = label,
+                text = label.uppercase(Locale.getDefault()),
                 color = Color.Gray,
-                fontSize = 14.sp
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                letterSpacing = 1.sp
             )
         }
     }

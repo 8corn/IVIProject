@@ -63,7 +63,7 @@ fun MainScreen(
                 .weight(0.65f)
                 .fillMaxHeight()
                 .padding(end = 8.dp)
-                .background(DeepGray, RoundedCornerShape(28.dp)),
+                .background(CarbonBlack, RoundedCornerShape(28.dp)),
             contentAlignment = Alignment.Center
         ) {
             DashboardWidget(

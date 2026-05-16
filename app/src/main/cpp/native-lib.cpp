@@ -93,7 +93,7 @@ Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getDetailedCarData(
 
     // 가상의 RPM 계산
     int calculatedRpm = static_cast<int>(speed * 55) + 800;
-    if (calculatedRpm > 9000) calculatedRpm = 9000;
+    if (calculatedRpm > 8000) calculatedRpm = 8000;
 
     std::string rpmStr = std::to_string(calculatedRpm);
     std::string mode = (speed > 120) ? "SPORT+" : (speed > 80) ? "SPORT" : (speed > 50) ? "ECO" : "NORMAL";
