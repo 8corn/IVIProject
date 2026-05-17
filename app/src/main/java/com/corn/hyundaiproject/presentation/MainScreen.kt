@@ -48,10 +48,6 @@ fun MainScreen(
     val rpm = uiState.rpm
     val currentMode = uiState.drivingStatus
 
-    //    val drivingStatus by mainViewModel.drivingStatus.collectAsState()
-    //    val climateAdvice by mainViewModel.climateAdvice.collectAsState()
-
-
     Row(
         modifier = Modifier
             .fillMaxSize()

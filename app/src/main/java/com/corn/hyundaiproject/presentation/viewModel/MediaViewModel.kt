@@ -57,7 +57,6 @@ class MediaViewModel @Inject constructor(
     val mediaState: StateFlow<MediaState> = _mediaState.asStateFlow()
 
     init {
-//        setupPlayer()
         setupCarApi()
         setupMediaController()
         updateProgress()
@@ -77,16 +76,16 @@ class MediaViewModel @Inject constructor(
                     null
                 }
 
-                sessionToken?.let { token ->
-                    controllerFuture = MediaController.Builder(context, token).buildAsync()
+                if (sessionToken != null) {
+                    controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
                     controllerFuture?.addListener({
                         val controller = mediaController ?: return@addListener
 
                         controller.addListener(object : Player.Listener {
-                            override fun onMediaMetadataChanged(metadata: MediaMetadata) {
+                            override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
                                 _mediaState.value = _mediaState.value.copy(
-                                    title = metadata.title?.toString() ?: "Unknown",
-                                    artist = metadata.artist?.toString() ?: "Unknown artist"
+                                    title = mediaMetadata.title?.toString() ?: "Unknown",
+                                    artist = mediaMetadata.artist?.toString() ?: "Unknown artist"
                                 )
                             }
 
@@ -95,9 +94,13 @@ class MediaViewModel @Inject constructor(
                             }
                         })
                     }, MoreExecutors.directExecutor())
+                } else {
+                    Log.d("MediaViewModel", "내장 ExoPlayer 가동 시작")
+                    setupPlayer()
                 }
             } catch (e: Exception) {
                 Log.e("MediaViewModel", "MediaController 설정 중 예상치 못한 오류: ${e.message}")
+                setupPlayer()
             }
         }
     }
@@ -152,7 +155,9 @@ class MediaViewModel @Inject constructor(
     private fun updateProgress() {
         viewModelScope.launch {
             while (true) {
-                mediaController?.let { player ->
+                val activePlayer: Player? = mediaController ?: exoPlayer
+
+                activePlayer?.let { player ->
                     val currentPos = player.currentPosition
                     val duration = player.duration.coerceAtLeast(10L)
 
@@ -167,52 +172,42 @@ class MediaViewModel @Inject constructor(
                         )
                     }
                 }
-//                exoPlayer?.let { player ->
-//                    val currentPos = player.currentPosition
-//                    val duration = player.duration.coerceAtLeast(10L)
-//
-//                    if (duration > 0) {
-//                        val progress = currentPos.toFloat() / duration.toFloat()
-//
-//                        _mediaState.value = _mediaState.value.copy(
-//                            progress = progress,
-//                            currentTime = formatTime((currentPos / 1000).toInt()),
-//                            totalTime = formatTime((duration / 1000).toInt()),
-//                            isPlaying = player.isPlaying
-//                        )
-//                    }
-//                }
                 delay(500)
             }
         }
     }
 
     fun togglePlay() {
-        mediaController?.let {
-            if (it.isPlaying)
-                it.pause()
-            else
-                it.play()
+        if (mediaController != null) {
+            mediaController?.let {
+                if (it.isPlaying) it.pause() else it.play()
+            }
+        } else {
+            exoPlayer?.let {
+                if (it.isPlaying) {
+                    it.pause()
+                    _mediaState.value = _mediaState.value.copy(isPlaying = false)
+                } else {
+                    it.play()
+                    _mediaState.value = _mediaState.value.copy(isPlaying = true)
+                }
+            }
         }
-//        exoPlayer?.let {
-//            if (it.isPlaying) {
-//                it.pause()
-//                _mediaState.value = _mediaState.value.copy(isPlaying = false)
-//            } else {
-//                it.play()
-//                _mediaState.value = _mediaState.value.copy(isPlaying = true)
-//            }
-//        }
     }
 
     override fun onCleared() {
         super.onCleared()
+
         controllerFuture?.let {
             MediaController.releaseFuture(it)
         }
+
+        exoPlayer?.let {
+            it.stop()
+            it.release()
+        }
+
         repository.closeConnection()
-//        exoPlayer?.release()
-//        exoPlayer = null
     }
 
     @OptIn(UnstableApi::class)
@@ -230,14 +225,10 @@ class MediaViewModel @Inject constructor(
     }
 
     fun skipToNext() {
-        mediaController?.seekToNext()
-//        exoPlayer?.seekToNext()
-//        exoPlayer?.play()
+        if (mediaController != null) mediaController?.seekToNext() else exoPlayer?.seekToNext()
     }
 
     fun skipToPrepare() {
-        mediaController?.seekToPrevious()
-//        exoPlayer?.seekToPrevious()
-//        exoPlayer?.play()
+        if (mediaController != null) mediaController?.seekToPrevious() else exoPlayer?.seekToPrevious()
     }
 }
