@@ -135,6 +135,7 @@ fun HvacWidget(
 @Composable
 fun ControlWidget(
     isLocked: Boolean,
+    isWindowOpen: Boolean,
     onLockClick: (Boolean) -> Unit,
     onWindowClick: () -> Unit,
 ) {
@@ -168,10 +169,13 @@ fun ControlWidget(
                         .weight(1f)
                         .height(60.dp),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = DeepGray)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isWindowOpen) Color(0xFF2C2C2C) else DeepGray
+                    )
                 ) {
                     Text(
-                        text = "창문",
+                        text = if (isWindowOpen) "창문 열림" else "창문 닫힘",
+                        color = if (isWindowOpen) G70Red else Color.White,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -184,11 +188,14 @@ fun ControlWidget(
                         .weight(1f)
                         .height(60.dp),
                     shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = G70Red)
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isLocked) DeepGray else G70Red
+                    )
                 ) {
                     Icon(
                         imageVector = if (isLocked) Icons.Default.Lock else Icons.Default.LockOpen,
                         contentDescription = null,
+                        tint = Color.White,
                         modifier = Modifier
                             .size(18.dp)
                     )
@@ -197,6 +204,7 @@ fun ControlWidget(
 
                     Text(
                         text = if (!isLocked) "문 열림" else "문 닫힘",
+                        color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                 }

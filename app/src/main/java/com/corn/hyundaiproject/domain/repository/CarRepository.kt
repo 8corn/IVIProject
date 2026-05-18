@@ -13,5 +13,6 @@ interface CarRepository {
 
     fun setTemperature(temp: Float)
     fun setDoorLock(lock: Boolean)
+    fun setWindowPosition(isOpen: Boolean, areaId: Int)
     fun closeConnection()
 }

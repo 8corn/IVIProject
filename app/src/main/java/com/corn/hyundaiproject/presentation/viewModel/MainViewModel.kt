@@ -54,7 +54,8 @@ class MainViewModel @Inject constructor (
             safetyLevel = safetyLevel,
             warningMessage = distanceMessage,
             speed = details["speed"] ?: "0",
-            rpm = details["rpm"]?.toFloatOrNull() ?: 0f
+            rpm = details["rpm"]?.toFloatOrNull() ?: 0f,
+            isWindowOpen = uiState.value.isWindowOpen
         )
     }.stateIn(
         scope = viewModelScope,
@@ -73,7 +74,10 @@ class MainViewModel @Inject constructor (
     }
 
     fun toggleWindow() {
-        Log.d("MainViewModel", "창문 제어 명령 전송됨")
+        val nextWindowState = !uiState.value.isWindowOpen
+        Log.d("MainViewModel", "창문 제어 명령 전송됨 - 상태: $nextWindowState")
+
+        repository.setWindowPosition(isOpen = nextWindowState, areaId = 1)
     }
 }
 
@@ -86,7 +90,8 @@ data class IntegratedCarState(
     val safetyLevel: SafetyLevel = SafetyLevel.SAFE,
     val warningMessage: String = "",
     val speed: String = "0",
-    val rpm: Float = 0f
+    val rpm: Float = 0f,
+    val isWindowOpen: Boolean = false
 )
 
 enum class SafetyLevel { SAFE, CAUTION, DANGER }

@@ -251,6 +251,18 @@ class CarPropertyManagerHelper(
         }
     }
 
+    fun setWindowPosition(isOpen: Boolean, areaId: Int) {
+        val propertyId = VehiclePropertyIds.WINDOW_POS
+        val value = if (isOpen) 100 else 0
+
+        try {
+            propertyManager?.setIntProperty(propertyId, areaId, value)
+            Log.d("data/car/Helper", "창문 제어 명령 전송 - 열림: $isOpen, 구역: $areaId")
+        } catch (e: Exception) {
+            Log.e("data/car/CarHelper", "창문 제어 명령 전송 실패: ${e.message}")
+        }
+    }
+
     fun release() {
         try {
             propertyManager?.unregisterCallback(propertyCallback)

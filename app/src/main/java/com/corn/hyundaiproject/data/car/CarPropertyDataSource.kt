@@ -5,11 +5,17 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class CarPropertyDataSource(context: Context) {
+@Singleton
+class CarPropertyDataSource @Inject constructor(
+    @param:ApplicationContext private val context: Context
+) {
 
     // C++ 라이브러리를 메모리에 로드
     companion object {
@@ -153,6 +159,10 @@ class CarPropertyDataSource(context: Context) {
     fun setDoorLock(lock: Boolean) {
         helper.setDoorLock(lock)
         _isDoorLocked.value = lock
+    }
+
+    fun setWindowPosition(isOpen: Boolean, areaId: Int) {
+        helper.setWindowPosition(isOpen, areaId)
     }
 
     fun closeConnection() {

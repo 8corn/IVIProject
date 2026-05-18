@@ -26,6 +26,10 @@ class CarRepositoryImpl @Inject constructor(
 
     override fun setDoorLock(lock: Boolean) = dataSource.setDoorLock(lock)
 
+    override fun setWindowPosition(isOpen: Boolean, areaId: Int) {
+        dataSource.setWindowPosition(isOpen, areaId)
+    }
+
     override fun closeConnection() {
         dataSource.closeConnection()
     }

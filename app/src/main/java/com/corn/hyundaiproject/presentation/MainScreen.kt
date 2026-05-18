@@ -100,6 +100,7 @@ fun MainScreen(
 
             ControlWidget(
                 isLocked = uiState.isDoorLocked,
+                isWindowOpen = uiState.isWindowOpen,
                 onLockClick = {
                     mainViewModel.toggleDoorLock()
                 },
