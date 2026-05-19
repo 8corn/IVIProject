@@ -63,6 +63,9 @@ class CarPropertyDataSource @Inject constructor(
     private val _isLaneDeparture = MutableStateFlow(false)
     val isLaneDeparture: StateFlow<Boolean> = _isLaneDeparture.asStateFlow()
 
+    private val _fuelLevel = MutableStateFlow(60f)
+    val fuelLevel: StateFlow<Float> = _fuelLevel.asStateFlow()
+
     // Helper를 생성하면서 콜백(람다)을 전달
     // Helper에서 onTemperatureChanged(temp)를 호출하면 이 블록이 실행됨
     private val helper = CarPropertyManagerHelper(context) { propertyId, value ->
@@ -173,11 +176,17 @@ class CarPropertyDataSource @Inject constructor(
     init {
         val handler = Handler(Looper.getMainLooper())
         var fakeSpeed = 0f
+        var fakeFuel = 20f
 
         handler.post(object : Runnable {
             override fun run() {
                 fakeSpeed += 5f
                 if (fakeSpeed > 200f) fakeSpeed = 0f
+
+                fakeFuel -= 0.2f
+                if (fakeFuel < 0f) fakeFuel = 60f
+
+                _fuelLevel.value = fakeFuel
 
                 val newDetails = getDetailedCarData(fakeSpeed)
 

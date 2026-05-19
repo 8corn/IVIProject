@@ -19,6 +19,7 @@ class CarRepositoryImpl @Inject constructor(
     override val vehicleDetails: StateFlow<Map<String, String>> = dataSource.vehicleDetails
     override val forwardDistance: StateFlow<Float> = dataSource.forwardDistance
     override val isLaneDeparture: StateFlow<Boolean> = dataSource.isLaneDeparture
+    override val fuelLevel: StateFlow<Float> = dataSource.fuelLevel
 
     override fun setTemperature(temp: Float) {
         dataSource.setTemperature(temp)

@@ -21,14 +21,27 @@ class MainViewModel @Inject constructor (
     // Repository의 Float 데이터를 HvacState 객체로 변환해서 UI에 노출
     // collectAsState를 편하게 쓰기 위해 StateFlow를 변환하는 로직
 
+    private var isNavigatingTrigger = false
+    private var showDialogTrigger = true
+    private var hasDismissedTrigger = false
+
+    private val adasFlow = combine(
+        repository.forwardDistance,
+        repository.isLaneDeparture
+    ) { distance, isDeparture ->
+        Pair(distance, isDeparture)
+    }
+
     val uiState: StateFlow<IntegratedCarState> = combine(
         getTemperatureUseCase(),
-        repository.forwardDistance,
-        repository.isLaneDeparture,
+        adasFlow,
         repository.drivingStatus,
         repository.vehicleDetails,
-    ) { hvacInfo, distance, isDeparture, status, details ->
+        repository.fuelLevel,
+    ) { hvacInfo, adas, status, details, fuel ->
         Log.d("MainViewModel", "수신된 맵 데이터: $details")
+
+        val (distance, isDeparture) = adas
 
         // 상황 판단 로직
         val safetyLevel = when {
@@ -38,9 +51,10 @@ class MainViewModel @Inject constructor (
         }
 
         // 메세지 결정
-        val distanceMessage = when (safetyLevel) {
-            SafetyLevel.DANGER -> "즉시 제동 및 차선 유지 필요"
-            SafetyLevel.CAUTION -> "전방 차량 간격 주의"
+        val distanceMessage = when {
+            safetyLevel == SafetyLevel.DANGER -> "즉시 제동 및 차선 유지 필요"
+            safetyLevel == SafetyLevel.CAUTION -> "전방 차량 간격 주의"
+            fuel < 15f && !isNavigatingTrigger -> "연료 부족! 근처 주유소 검색이 필요합니다."
             else -> hvacInfo.warningMessage ?: "안전 운행 중"
         }
 
@@ -55,13 +69,31 @@ class MainViewModel @Inject constructor (
             warningMessage = distanceMessage,
             speed = details["speed"] ?: "0",
             rpm = details["rpm"]?.toFloatOrNull() ?: 0f,
-            isWindowOpen = uiState.value.isWindowOpen
+            isWindowOpen = uiState.value.isWindowOpen,
+            fuelLevel =fuel,
+            showFuelDialog = fuel < 15f && !uiState.value.hasDismissedFuelDialog,
+            hasDismissedFuelDialog = uiState.value.hasDismissedFuelDialog,
+            isNavigatingToGasStation = uiState.value.isNavigatingToGasStation,
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = IntegratedCarState()
     )
+
+    // 팝업 주요소 검색을 눌렀을 때
+    fun startGasStationNavigation() {
+        Log.d("MainViewModel", "시나리오: 근처 최저가 주유소로 경로를 안내합니다.")
+
+        isNavigatingTrigger = true
+        showDialogTrigger = false
+    }
+
+    // 팝업 닫기 눌렀을 때
+    fun dismissFuelDialog() {
+        showDialogTrigger = false
+        hasDismissedTrigger = true
+    }
 
     fun updateTemperature(delta: Float) {
         val newTemp = uiState.value.temperature + delta
@@ -91,7 +123,11 @@ data class IntegratedCarState(
     val warningMessage: String = "",
     val speed: String = "0",
     val rpm: Float = 0f,
-    val isWindowOpen: Boolean = false
+    val isWindowOpen: Boolean = false,
+    val fuelLevel: Float = 100f,
+    val showFuelDialog: Boolean = false,
+    val hasDismissedFuelDialog: Boolean = false,
+    val isNavigatingToGasStation: Boolean = false,
 )
 
 enum class SafetyLevel { SAFE, CAUTION, DANGER }
