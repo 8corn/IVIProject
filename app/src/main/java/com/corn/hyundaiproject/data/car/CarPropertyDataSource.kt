@@ -52,6 +52,9 @@ class CarPropertyDataSource @Inject constructor(
     private val _isDoorLocked = MutableStateFlow(true)
     val isDoorLocked: StateFlow<Boolean> = _isDoorLocked.asStateFlow()
 
+    private val _isWindowOpen = MutableStateFlow(true)
+    val isWindowOpen: StateFlow<Boolean> = _isWindowOpen.asStateFlow()
+
     private val _vehicleDetails = MutableStateFlow(
         mapOf("speed" to "0", "rpm" to "0", "drive_mode" to "NORMAL", "engine_temp" to "90.5")
     )
@@ -126,6 +129,11 @@ class CarPropertyDataSource @Inject constructor(
                     Log.d("G70_Native", "헤드라이트가 꺼집니다.")
                 }
             }
+            VehiclePropertyIds.WINDOW_POS -> {
+                val isOpen = value as? Boolean ?: false
+                _isWindowOpen.value = isOpen
+                Log.d("G70_Native", "DataSource 최종 수신 완료 - 창문 오픈 상태: $isOpen")
+            }
             0x21400101 -> {
                 // 전방 거리
                 val distance = value as? Float ?: 0f
@@ -167,6 +175,7 @@ class CarPropertyDataSource @Inject constructor(
 
     fun setWindowPosition(isOpen: Boolean, areaId: Int) {
         helper.setWindowPosition(isOpen, areaId)
+        _isWindowOpen.value = isOpen
     }
 
     fun closeConnection() {

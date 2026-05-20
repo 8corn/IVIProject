@@ -52,6 +52,12 @@ class CarPropertyManagerHelper(
                 VehiclePropertyIds.GEAR_SELECTION -> Log.d("data/car/CarHelper", "현재 기어: $rawValue")
                 VehiclePropertyIds.NIGHT_MODE -> Log.d("data/car/CarHelper", "야간 모드 상태: $rawValue")
                 VehiclePropertyIds.FUEL_LEVEL -> Log.d("data/car/CarHelper", "연료 잔량: $rawValue")
+                VehiclePropertyIds.WINDOW_POS -> {
+                    val pos = rawValue as? Int ?: 0
+                    val isOpen = pos > 0
+                    onTemperatureChanged(propertyId, isOpen)
+                    Log.d("G70_Native", "VHAL로부터 창문 상태 수신: $isOpen")
+                }
 
                 // 조명 및 시동
                 289407235 -> Log.d("data/car/CarHelper", "헤드라이트: $rawValue")

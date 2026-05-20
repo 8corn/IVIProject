@@ -16,6 +16,7 @@ class CarRepositoryImpl @Inject constructor(
     override val drivingStatus: StateFlow<String> = dataSource.drivingStatus
     override val climateAdvice: StateFlow<String> = dataSource.climateAdvice
     override val isDoorLocked: StateFlow<Boolean> = dataSource.isDoorLocked
+    override val isWindowOpen: StateFlow<Boolean> = dataSource.isWindowOpen
     override val vehicleDetails: StateFlow<Map<String, String>> = dataSource.vehicleDetails
     override val forwardDistance: StateFlow<Float> = dataSource.forwardDistance
     override val isLaneDeparture: StateFlow<Boolean> = dataSource.isLaneDeparture
