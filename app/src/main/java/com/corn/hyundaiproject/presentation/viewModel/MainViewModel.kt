@@ -9,9 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import com.corn.hyundaiproject.domain.model.HvacInfo
 
 @HiltViewModel
 class MainViewModel @Inject constructor (
@@ -25,6 +25,9 @@ class MainViewModel @Inject constructor (
     private var showDialogTrigger = true
     private var hasDismissedTrigger = false
 
+    private var lastUpdateTime: Long = System.currentTimeMillis()
+    private var remainDistanceMeter: Float = 1200f
+
     private val adasFlow = combine(
         repository.forwardDistance,
         repository.isLaneDeparture
@@ -32,16 +35,42 @@ class MainViewModel @Inject constructor (
         Pair(distance, isDeparture)
     }
 
+    @Suppress("UNCHECKED_CAST")
     val uiState: StateFlow<IntegratedCarState> = combine(
         getTemperatureUseCase(),
         adasFlow,
         repository.drivingStatus,
         repository.vehicleDetails,
         repository.fuelLevel,
-    ) { hvacInfo, adas, status, details, fuel ->
+        repository.isWindowOpen,
+    ) { flows ->
+        val hvacInfo = flows[0] as HvacInfo
+        val adas = flows[1] as Pair<Float, Boolean>
+        val status = flows[2] as String
+        val details = flows[3] as Map<String, String>
+        val fuel = flows[4] as Float
+        val windowOpen = flows[5] as Boolean
+
         Log.d("MainViewModel", "수신된 맵 데이터: $details")
 
         val (distance, isDeparture) = adas
+        val speedFloat = details["speed"]?.toFloatOrNull() ?: 0f
+
+        val currentTime = System.currentTimeMillis()
+        val deltaTimeSec = (currentTime - lastUpdateTime) / 1000f
+        lastUpdateTime = currentTime
+
+        if (isNavigatingTrigger && remainDistanceMeter > 0f) {
+            val speedMeterPerSec = speedFloat / 3.6f
+            remainDistanceMeter -= speedMeterPerSec * deltaTimeSec
+            if (remainDistanceMeter < 0f) remainDistanceMeter = 0f
+        }
+
+        val roadOffset = if (isNavigatingTrigger) {
+            (currentTime * (speedFloat / 10f) % 1000) / 10f
+        } else {
+            0f
+        }
 
         // 상황 판단 로직
         val safetyLevel = when {
@@ -69,11 +98,13 @@ class MainViewModel @Inject constructor (
             warningMessage = distanceMessage,
             speed = details["speed"] ?: "0",
             rpm = details["rpm"]?.toFloatOrNull() ?: 0f,
-            isWindowOpen = uiState.value.isWindowOpen,
+            isWindowOpen = windowOpen,
             fuelLevel =fuel,
-            showFuelDialog = fuel < 15f && !uiState.value.hasDismissedFuelDialog,
-            hasDismissedFuelDialog = uiState.value.hasDismissedFuelDialog,
-            isNavigatingToGasStation = uiState.value.isNavigatingToGasStation,
+            showFuelDialog = fuel < 15f && showDialogTrigger && !hasDismissedTrigger,
+            hasDismissedFuelDialog = hasDismissedTrigger,
+            isNavigatingToGasStation = isNavigatingTrigger,
+            remainDistance = remainDistanceMeter,
+            roadOffset = roadOffset,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -128,6 +159,8 @@ data class IntegratedCarState(
     val showFuelDialog: Boolean = false,
     val hasDismissedFuelDialog: Boolean = false,
     val isNavigatingToGasStation: Boolean = false,
+    val remainDistance: Float = 1200f,
+    val roadOffset: Float = 0f
 )
 
 enum class SafetyLevel { SAFE, CAUTION, DANGER }

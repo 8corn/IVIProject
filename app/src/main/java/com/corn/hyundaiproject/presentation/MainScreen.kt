@@ -1,16 +1,16 @@
 package com.corn.hyundaiproject.presentation
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -22,7 +22,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -106,39 +109,141 @@ fun MainScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.Center,
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "Navigation Mode",
-                        color = Color.Gray,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = Color(0xFF222222),
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Canvas(
+                            modifier = Modifier
+                                .size(40.dp)
+                        ) {
+                            val path = Path().apply {
+                                moveTo(size.width * 0.3f, size.height * 0.8f)
+                                lineTo(size.width * 0.3f, size.height * 0.4f)
+                                quadraticTo(size.width * 0.3f, size.height * 0.2f, size.width * 0.6f, size.height * 0.2f)
+                                moveTo(size.width * 0.5f, size.height * 0.05f)
+                                lineTo(size.width * 0.75f, size.height * 0.2f)
+                                lineTo(size.width * 0.5f, size.height * 0.35f)
+                            }
+                            drawPath(
+                                path = path,
+                                color = G70Red,
+                                style = Stroke(width = 6.dp.toPx())
+                            )
+                        }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                        Column {
+                            Text(
+                                text = "300m 앞 오른쪽 방향",
+                                color = Color.White,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
 
-                    Text(
-                        text = "현대 오일뱅크 서초지점 안내 중",
-                        color = Color.White,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
+                            Text(
+                                text = "현대오일뱅크 서초지점",
+                                color = Color.LightGray,
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
 
-                    Text(
-                        text = "남은 거리: 1.2Km | 예상 소요 시간: 4분",
-                        color = G70Red,
-                        fontSize = 16.sp
-                    )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Canvas(
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            val w = size.width
+                            val h = size.height
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                            val horizonY = h * 0.3f
 
-                    Text(
-                        text = "현재 속도: $speed km/h | 연료량: ${String.format(Locale.getDefault(), "%.1f", uiState.fuelLevel)}%",
-                        color = Color.LightGray,
-                        fontSize = 14.sp,
-                    )
+                            drawLine(
+                                color = Color(0xFF444444),
+                                Offset(w * 0.45f, horizonY),
+                                Offset(w * 0.1f, h),
+                                strokeWidth = 4f
+                            )
+
+                            drawLine(
+                                color = Color(0xFF444444),
+                                Offset(w * 0.55f, horizonY),
+                                Offset(w * 0.9f, h),
+                                strokeWidth = 4f
+                            )
+
+                            val numDashes = 5
+                            for (i in 0 until numDashes) {
+                                val progress = ((i.toFloat() / numDashes) + (uiState.roadOffset / 100f)) % 1.0f
+
+                                val currY = horizonY + (h - horizonY) * progress
+                                val nextY = horizonY + (h - horizonY) * (progress + 0.08f)
+
+                                if (nextY < h) {
+                                    val startX = w * 0.5f - (w * 0.05f * progress)
+                                    val endX = w * 0.5f - (w * 0.05f * (progress + 0.08f))
+
+                                    drawLine(
+                                        color = Color(0xFFFFA100),
+                                        start = Offset(w * 0.5f, currY),
+                                        end = Offset(w * 0.5f, nextY),
+                                        strokeWidth = 4f + (10f * progress)
+                                    )
+                                }
+                            }
+                        }
+
+                        Text(
+                            text = "$speed",
+                            color = Color.White,
+                            fontSize = 48.sp,
+                            fontWeight = FontWeight.Black,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val distanceKm = uiState.remainDistance / 1000f
+                        val formattedDistance = String.format(Locale.getDefault(), "%.2f km", distanceKm)
+
+                        val remainingMinutes = (distanceKm * 3.3f).toInt().coerceAtLeast(1)
+
+                        Text(
+                            text = "남은 거리: $formattedDistance",
+                            color = G70Red,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Text(
+                            text = "예상 소요 시간: $remainingMinutes 분",
+                            color = Color.White,
+                            fontSize = 15.sp
+                        )
+                    }
                 }
             } else {
                 DashboardWidget(

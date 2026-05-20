@@ -7,6 +7,7 @@ interface CarRepository {
     val drivingStatus: StateFlow<String>
     val climateAdvice: StateFlow<String>
     val isDoorLocked: StateFlow<Boolean>
+    val isWindowOpen: StateFlow<Boolean>
     val vehicleDetails: StateFlow<Map<String, String>>
     val forwardDistance: StateFlow<Float>
     val isLaneDeparture: StateFlow<Boolean>

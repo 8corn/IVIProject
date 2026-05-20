@@ -112,6 +112,7 @@ class CarPropertyDataSource @Inject constructor(
             }
             VehiclePropertyIds.FUEL_LEVEL -> {
                 val fuel = value as Float
+                _fuelLevel.value = fuel
                 Log.d("G70_Native", checkFuelStatus(fuel))
                 Log.d("G70_Native", "현재 주행 효율 등금: ${getEfficiencyGrade(fuel)}등급")
             }
