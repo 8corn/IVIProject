@@ -161,7 +161,7 @@ Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getAdasDistanceNativ
     }
 
     float sum = std::accumulate(distanceHistory.begin(), distanceHistory.end(), 0.0f);
-    float filteredDistance = sum / distanceHistory.size();
+    float filteredDistance = sum / static_cast<float>(distanceHistory.size());
 
-    return raw_sensor_data;
+    return filteredDistance;
 }
