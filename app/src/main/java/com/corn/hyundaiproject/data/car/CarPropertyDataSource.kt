@@ -182,32 +182,32 @@ class CarPropertyDataSource @Inject constructor(
         helper.release()
     }
 
-    // 클래스터 테스트
-    init {
-        val handler = Handler(Looper.getMainLooper())
-        var fakeSpeed = 0f
-        var fakeFuel = 20f
-
-        handler.post(object : Runnable {
-            override fun run() {
-                fakeSpeed += 5f
-                if (fakeSpeed > 200f) fakeSpeed = 0f
-
-                fakeFuel -= 0.2f
-                if (fakeFuel < 0f) fakeFuel = 60f
-
-                _fuelLevel.value = fakeFuel
-
-                val newDetails = getDetailedCarData(fakeSpeed)
-
-                _vehicleDetails.value = LinkedHashMap(newDetails)
-                _drivingStatus.value = checkDrivingStatus(fakeSpeed)
-                _forwardDistance.value = (100f - fakeSpeed).coerceAtLeast(10f)
-
-                Log.d("G70_PUMP", "펌프질 - Speed: $fakeSpeed, RPM: ${newDetails["rpm"]}")
-
-                handler.postDelayed(this, 500)
-            }
-        })
-    }
+//    // 클래스터 테스트
+//    init {
+//        val handler = Handler(Looper.getMainLooper())
+//        var fakeSpeed = 0f
+//        var fakeFuel = 20f
+//
+//        handler.post(object : Runnable {
+//            override fun run() {
+//                fakeSpeed += 5f
+//                if (fakeSpeed > 200f) fakeSpeed = 0f
+//
+//                fakeFuel -= 0.2f
+//                if (fakeFuel < 0f) fakeFuel = 60f
+//
+//                _fuelLevel.value = fakeFuel
+//
+//                val newDetails = getDetailedCarData(fakeSpeed)
+//
+//                _vehicleDetails.value = LinkedHashMap(newDetails)
+//                _drivingStatus.value = checkDrivingStatus(fakeSpeed)
+//                _forwardDistance.value = (100f - fakeSpeed).coerceAtLeast(10f)
+//
+//                Log.d("G70_PUMP", "펌프질 - Speed: $fakeSpeed, RPM: ${newDetails["rpm"]}")
+//
+//                handler.postDelayed(this, 500)
+//            }
+//        })
+//    }
 }
