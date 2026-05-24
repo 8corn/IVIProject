@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -210,14 +212,43 @@ fun MainScreen(
                             }
                         }
 
-                        Text(
-                            text = "$speed",
-                            color = Color.White,
-                            fontSize = 48.sp,
-                            fontWeight = FontWeight.Black,
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                        )
+                        Column (
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Text(
+                                text = "$speed",
+                                color = Color.White,
+                                fontSize = 48.sp,
+                                fontWeight = FontWeight.Black,
+                            )
+
+                            Text(
+                                text = "km/h",
+                                color = Color.Gray,
+                                fontSize = 12.sp,
+                            )
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "${String.format(Locale.getDefault(), "%,.0f", rpm)}RPM",
+                                    color = if (rpm > 5500) G70Red else Color.Cyan,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                Text(
+                                    text = "${uiState.engineTemp}°C",
+                                    color = Color.LightGray,
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
                     }
 
                     Row(
