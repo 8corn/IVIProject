@@ -1,4 +1,4 @@
-package com.corn.hyundaiproject.presentation
+package com.corn.hyundaiproject.presentation.screen
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -32,6 +32,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.corn.hyundaiproject.presentation.ControlWidget
+import com.corn.hyundaiproject.presentation.DashboardWidget
+import com.corn.hyundaiproject.presentation.HvacWidget
+import com.corn.hyundaiproject.presentation.MediaWidget
 import com.corn.hyundaiproject.presentation.ui.theme.CarbonBlack
 import com.corn.hyundaiproject.presentation.ui.theme.G70Red
 import com.corn.hyundaiproject.presentation.viewModel.MainViewModel

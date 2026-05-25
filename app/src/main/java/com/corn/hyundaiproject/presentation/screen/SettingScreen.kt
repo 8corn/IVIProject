@@ -1,4 +1,4 @@
-package com.corn.hyundaiproject.presentation
+package com.corn.hyundaiproject.presentation.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.corn.hyundaiproject.presentation.SettingItem
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 
 @Composable

@@ -13,3 +13,8 @@ val Pink40 = Color(0xFF7D5260)
 val CarbonBlack = Color(0xFF1A1A1A)
 val DeepGray = Color(0xFF242424)
 val G70Red = Color(0xFFC62828)
+
+val HyundaiPureBlack = Color(0xFF030303)
+val PanelDividerColor = Color(0xFF1F1F1F)
+val MetallicSilver = Color(0xFFE0E0E0)
+val ActiveGenesisRed = Color(0xFF901020)

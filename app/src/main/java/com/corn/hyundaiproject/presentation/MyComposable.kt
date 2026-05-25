@@ -659,3 +659,34 @@ fun AdasWidget(
         }
     }
 }
+
+
+@Composable
+fun CustomCircleIcon(modifier: Modifier, tintColor: Color, isSelected: Boolean) {
+    Canvas(modifier = modifier) {
+        val center = Offset(size.width / 2, size.height / 2)
+        val radius = size.minDimension / 2 * 0.8f
+
+        // 바깥쪽 메탈릭 링
+        drawCircle(
+            color = if (isSelected) Color(0xFFD63346) else Color(0xFF333336),
+            radius = radius,
+            center = center,
+            style = androidx.compose.ui.graphics.drawscope.Stroke(width = 3f)
+        )
+
+        // 내부 계기판 바늘/나침반 모티브 형상 드로잉
+        drawCircle(
+            color = tintColor.copy(alpha = 0.2f),
+            radius = radius * 0.7f,
+            center = center
+        )
+
+        drawLine(
+            color = tintColor,
+            start = Offset(center.x, center.y - (radius * 0.5f)),
+            end = Offset(center.x, center.y + (radius * 0.5f)),
+            strokeWidth = 4f
+        )
+    }
+}
