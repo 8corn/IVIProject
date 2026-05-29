@@ -40,13 +40,13 @@ fun HyundaiNavHost(
                 }
             )
         }
-//        composable ("main") {
-//            MainScreen(
-//                onSettingsClick = {
-//                    navController.navigate("settings")
-//                }
-//            )
-//        }
+        composable ("main") {
+            MainScreen(
+                onSettingsClick = {
+                    navController.navigate("settings")
+                }
+            )
+        }
         composable("settings") {
             SettingScreen(
                 onBackClick = {
