@@ -2,8 +2,6 @@ package com.corn.hyundaiproject.data.car
 
 import android.car.VehiclePropertyIds
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +31,7 @@ class CarPropertyDataSource @Inject constructor(
     private external fun isHazardous(gear: Int, isDoorOpen: Boolean): Boolean
     private external fun getDetailedCarData(speed: Float): Map<String, String>
     private external fun getAdasDistanceNative(rawDistanceData: Float): Float
+    private external fun tuneRadioNative(currentFrequency: Float, isTuneUp: Boolean): Map<String, String>
 
     // 상태 저장용 변수 (상태 판단을 위해 필요)
     private var currentGear: Int = 0
@@ -68,6 +67,12 @@ class CarPropertyDataSource @Inject constructor(
 
     private val _fuelLevel = MutableStateFlow(60f)
     val fuelLevel: StateFlow<Float> = _fuelLevel.asStateFlow()
+
+    private val _radioFrequency = MutableStateFlow(87.5f)
+    val radioFrequency: StateFlow<Float> = _radioFrequency.asStateFlow()
+
+    private val _radioStationName = MutableStateFlow("БизнесFM")
+    val radioStationName: StateFlow<String> = _radioStationName.asStateFlow()
 
     // Helper를 생성하면서 콜백(람다)을 전달
     // Helper에서 onTemperatureChanged(temp)를 호출하면 이 블록이 실행됨
@@ -154,6 +159,17 @@ class CarPropertyDataSource @Inject constructor(
         if (isHazardous(currentGear, isAnyDoorOpen)) {
             _drivingStatus.value = "위험! 주행 중 문 열림 감지!"
         }
+    }
+
+    // 라디오 외부에서 호출되는 통로 함수
+    fun requestRadioTune(isTuneUp: Boolean) {
+        val details = tuneRadioNative(_radioFrequency.value, isTuneUp)
+
+        val freqStr = details["frequency"] ?: "87.5"
+        val station = details["station_name"] ?: "알 수 없는 채널"
+
+        _radioFrequency.value = freqStr.toFloatOrNull() ?: 87.5f
+        _radioStationName.value = station
     }
 
 //    // 속도 주행 UI 변경 테스트 코드

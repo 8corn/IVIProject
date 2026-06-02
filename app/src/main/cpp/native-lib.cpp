@@ -8,6 +8,17 @@
 #define FILTER_WINDOW_SIZE 5
 std::vector<float> distanceHistory;
 
+std::string getNativeStationName(float frequency) {
+    char freqBuf[10];
+    sprintf(freqBuf, "%.1f", frequency);
+    std::string freqStr(freqBuf);
+
+    if (freqStr == "87.5")   return "БизнесFM";
+    if (freqStr == "91.9")   return "현대 인포테인먼트 매거진";
+    if (freqStr == "107.7")  return "Genesis 가상 커넥트";
+    return "가상 채널 (주파수 탐색 중)";
+}
+
 // 연비
 extern "C" JNIEXPORT jint JNICALL
 Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getEfficiencyGrade(
@@ -164,4 +175,37 @@ Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getAdasDistanceNativ
     float filteredDistance = sum / static_cast<float>(distanceHistory.size());
 
     return filteredDistance;
+}
+
+// 라디오 주파수 변경 밈ㅊ 데이터 패키징 함수
+extern "C" JNIEXPORT jobject JNICALL
+Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_tuneRadioNative(
+        JNIEnv* env, jobject thiz, jfloat current_frequency, jboolean is_tune_up) {
+
+    // 1. 주파수 증감 계산
+    float newFrequency = current_frequency;
+    if (is_tune_up) {
+        if (newFrequency < 108.0f) newFrequency += 0.1f;
+    } else {
+        if (newFrequency > 87.5f) newFrequency -= 0.1f;
+    }
+
+    // 2. 가상 방송국 이름 가져오기
+    std::string stationName = getNativeStationName(newFrequency);
+
+    // 3. Kotlin/Java로 넘겨주기 위해 HashMap 생성
+    jclass mapClass = env->FindClass("java/util/HashMap");
+    jmethodID init = env->GetMethodID(mapClass, "<init>", "()V");
+    jobject hashMap = env->NewObject(mapClass, init);
+    jmethodID put = env->GetMethodID(mapClass, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+
+    // 소수점 한자리 문자열 변환
+    char freqBuffer[10];
+    sprintf(freqBuffer, "%.1f", newFrequency);
+
+    // HashMap에 주파수와 방송국명 적재
+    env->CallObjectMethod(hashMap, put, env->NewStringUTF("frequency"), env->NewStringUTF(freqBuffer));
+    env->CallObjectMethod(hashMap, put, env->NewStringUTF("station_name"), env->NewStringUTF(stationName.c_str()));
+
+    return hashMap;
 }
