@@ -46,6 +46,12 @@ fun HyundaiNavHost(
             MainScreen(
                 onSettingsClick = {
                     navController.navigate("settings")
+                },
+                onHomeClick = {
+                    navController.popBackStack(
+                        route = "launcher",
+                        inclusive = false
+                    )
                 }
             )
         }
