@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.corn.hyundaiproject.presentation.screen.HomeScreen
 import com.corn.hyundaiproject.presentation.screen.MainScreen
 import com.corn.hyundaiproject.presentation.screen.RadioScreen
+import com.corn.hyundaiproject.presentation.screen.SearchScreen
 import com.corn.hyundaiproject.presentation.screen.SettingScreen
 
 @Composable
@@ -33,6 +34,7 @@ fun HyundaiNavHost(
                 onAppClick = { route ->
                     when(route) {
                         "map_screen" -> navController.navigate("main")
+                        "search_screen" -> navController.navigate("search")
                         "radio_screen" -> navController.navigate("radio")
                         "setting_screen" -> navController.navigate("settings")
                         else -> {
@@ -52,6 +54,18 @@ fun HyundaiNavHost(
                         route = "launcher",
                         inclusive = false
                     )
+                }
+            )
+        }
+        composable("search") {
+            SearchScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onRouteSelect = { selectedDestination ->
+                    navController.navigate("main") {
+                        popUpTo("launcher")
+                    }
                 }
             )
         }
