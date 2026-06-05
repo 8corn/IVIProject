@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.corn.hyundaiproject.presentation.screen.HomeScreen
 import com.corn.hyundaiproject.presentation.screen.MainScreen
+import com.corn.hyundaiproject.presentation.screen.PhoneScreen
 import com.corn.hyundaiproject.presentation.screen.RadioScreen
 import com.corn.hyundaiproject.presentation.screen.SearchScreen
 import com.corn.hyundaiproject.presentation.screen.SettingScreen
@@ -36,6 +37,7 @@ fun HyundaiNavHost(
                         "map_screen" -> navController.navigate("main")
                         "search_screen" -> navController.navigate("search")
                         "radio_screen" -> navController.navigate("radio")
+                        "phone_screen" -> navController.navigate("phone")
                         "setting_screen" -> navController.navigate("settings")
                         else -> {
                             // TODO: 다른 화면 대기
@@ -69,15 +71,22 @@ fun HyundaiNavHost(
                 }
             )
         }
-        composable("settings") {
-            SettingScreen(
+        composable("radio") {
+            RadioScreen(
                 onBackClick = {
                     navController.popBackStack()
                 }
             )
         }
-        composable("radio") {
-            RadioScreen(
+        composable("phone") {
+            PhoneScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable("settings") {
+            SettingScreen(
                 onBackClick = {
                     navController.popBackStack()
                 }
