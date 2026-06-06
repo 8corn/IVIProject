@@ -15,6 +15,7 @@ import com.corn.hyundaiproject.presentation.screen.ProjectionScreen
 import com.corn.hyundaiproject.presentation.screen.RadioScreen
 import com.corn.hyundaiproject.presentation.screen.SearchScreen
 import com.corn.hyundaiproject.presentation.screen.SettingScreen
+import com.corn.hyundaiproject.presentation.screen.VoiceMemoScreen
 
 @Composable
 fun HyundaiNavHost(
@@ -40,6 +41,7 @@ fun HyundaiNavHost(
                         "radio_screen" -> navController.navigate("radio")
                         "phone_screen" -> navController.navigate("phone")
                         "projection_screen" -> navController.navigate("projection")
+                        "voice_screen" -> navController.navigate("voice")
                         "setting_screen" -> navController.navigate("settings")
                         else -> {
                             // TODO: 다른 화면 대기
@@ -89,6 +91,13 @@ fun HyundaiNavHost(
         }
         composable("projection") {
             ProjectionScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable("voice") {
+            VoiceMemoScreen(
                 onBackClick = {
                     navController.popBackStack()
                 }
