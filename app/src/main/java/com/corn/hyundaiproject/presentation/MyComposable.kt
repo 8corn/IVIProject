@@ -240,7 +240,6 @@ fun SettingItem(title: String, value: String) {
 fun MediaWidget(
     state: MediaState,
     onPlayPause: () -> Unit,
-    onSettingsClick: () -> Unit,
     onSkipForward: () -> Unit = {},
     onSkipBackward: () -> Unit = {},
 ) {
@@ -394,20 +393,6 @@ fun MediaWidget(
             }
 
             Spacer(modifier = Modifier.height(10.dp))
-        }
-
-        IconButton(
-            onClick = onSettingsClick,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = "Settings",
-                tint = Color.Gray,
-                modifier = Modifier
-                    .size(40.dp)
-            )
         }
     }
 }

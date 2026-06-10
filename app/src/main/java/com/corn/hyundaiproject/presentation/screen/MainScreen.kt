@@ -375,7 +375,6 @@ fun MainScreen(
                     onPlayPause = { mediaViewModel.togglePlay() },
                     onSkipForward = { mediaViewModel.skipToNext() },
                     onSkipBackward = { mediaViewModel.skipToPrepare() },
-                    onSettingsClick = onSettingsClick
                 )
             }
         }

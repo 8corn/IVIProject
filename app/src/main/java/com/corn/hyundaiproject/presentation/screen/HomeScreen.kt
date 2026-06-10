@@ -58,7 +58,7 @@ fun HomeScreen(
             LauncherAppItem("전화", "연결된 기기가\n없습니다.", "phone_screen") { m, c -> CustomCircleIcon(m, c, false) },
             LauncherAppItem("폰 프로젝션", "연결된 기기가\n없습니다.", "projection_screen") { m, c -> CustomCircleIcon(m, c, false) },
             LauncherAppItem("음성 메모", "메모 0건", "voice_screen") { m, c -> CustomCircleIcon(m, c, false) },
-            LauncherAppItem("설정", "게스트\n사용 중", "settings_screen") { m, c -> CustomCircleIcon(m, c, false) }
+            LauncherAppItem("설정", "게스트\n사용 중", "setting_screen") { m, c -> CustomCircleIcon(m, c, false) }
         )
     }
 
