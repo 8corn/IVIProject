@@ -1,9 +1,11 @@
 package com.corn.hyundaiproject.presentation.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.corn.hyundaiproject.presentation.SettingItem
+import com.corn.hyundaiproject.presentation.ui.theme.HyundaiPureBlack
+import com.corn.hyundaiproject.presentation.ui.theme.MetallicSilver
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 
 @Composable
@@ -39,21 +43,20 @@ fun SettingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF121212))
+            .background(HyundaiPureBlack)
             .padding(24.dp)
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .height(56.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            IconButton(
-                onClick = onBackClick
-            ) {
+            IconButton(onClick = onBackClick) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
-                    tint = Color.White
+                    tint = MetallicSilver
                 )
             }
 
@@ -63,57 +66,88 @@ fun SettingScreen(
                 text = "차량 설정",
                 color = Color.White,
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
+                fontWeight = FontWeight.Bold
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column (
+        Row(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                modifier = Modifier
+                    .weight(0.4f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = details["model"] ?: "G70 Sport",
+                        color = Color.White,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Black
+                    )
 
-            SettingItem(
-                title = "모델명",
-                value = details["model"] ?: "G70 Sport"
-            )
+                    Text(
+                        text = "Connected System",
+                        color = Color.Gray,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                    )
+                }
 
-            SettingItem(
-                title = "차대번호 (VIN)",
-                value = details["vin"] ?: "KMH-G70-2026-XXXX"
-            )
-
-            SettingItem(
-                title = "엔진 상태",
-                value = "${details["engine_temp"] ?: "0"}°C (정상)"
-            )
-
-            SettingItem(
-                title = "드리이브 모드",
-                value = details["drive_mode"] ?: "NORMAL"
-            )
-
-            repeat(10) {
-                SettingItem(
-                    title = "추가 설정 항목 $it",
-                    value = "설정값"
-                )
+                Column(
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                ) {
+                    Text(
+                        text = "Software Version: 1.0.0-8corn",
+                        color = Color.DarkGray,
+                        fontSize = 13.sp
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Text(
-                text = "Software Version: 1.0.0-8corn",
-                color = Color.DarkGray,
-                fontSize = 12.sp,
+            Column (
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-            )
+                    .weight(0.6f)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                SettingItem(
+                    title = "모델명",
+                    value = details["model"] ?: "G70 Sport"
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                SettingItem(
+                    title = "차대번호 (VIN)",
+                    value = details["vin"] ?: "KMH-G70-2026-XXXX"
+                )
+
+                SettingItem(
+                    title = "엔진 상태",
+                    value = "${details["engine_temp"] ?: "0"}°C (정상)"
+                )
+
+                SettingItem(
+                    title = "드리이브 모드",
+                    value = details["drive_mode"] ?: "NORMAL"
+                )
+
+                repeat(10) {
+                    SettingItem(
+                        title = "추가 설정 항목 $it",
+                        value = "설정값"
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
