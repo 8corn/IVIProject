@@ -9,6 +9,7 @@ interface CarRepository {
     val isDoorLocked: StateFlow<Boolean>
     val isWindowOpen: StateFlow<Boolean>
     val vehicleDetails: StateFlow<Map<String, String>>
+    suspend fun fetchLatestVehicleDetails()
     val forwardDistance: StateFlow<Float>
     val isLaneDeparture: StateFlow<Boolean>
     val fuelLevel: StateFlow<Float>

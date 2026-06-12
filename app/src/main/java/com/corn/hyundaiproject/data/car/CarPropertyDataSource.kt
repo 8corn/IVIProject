@@ -154,6 +154,10 @@ class CarPropertyDataSource @Inject constructor(
         }
     }
 
+    suspend fun fetchLatestFromVhal() {
+        // Todo: CarPropertyManagerHelper
+    }
+
     // 문열림 위험 상황 판단
     private fun checkDoorSafety() {
         if (isHazardous(currentGear, isAnyDoorOpen)) {
