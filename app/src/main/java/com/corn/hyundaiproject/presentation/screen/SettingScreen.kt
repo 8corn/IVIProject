@@ -135,7 +135,7 @@ fun SettingScreen(
                 )
 
                 SettingItem(
-                    title = "드리이브 모드",
+                    title = "드라이브 모드",
                     value = details["drive_mode"] ?: "NORMAL"
                 )
 
