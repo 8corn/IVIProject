@@ -4,9 +4,11 @@ import android.car.VehiclePropertyIds
 import android.content.Context
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -154,8 +156,32 @@ class CarPropertyDataSource @Inject constructor(
         }
     }
 
-    suspend fun fetchLatestFromVhal() {
-        // Todo: CarPropertyManagerHelper
+    suspend fun fetchLatestFromVhal() = withContext(Dispatchers.IO) {
+        try {
+            val currentSpeed = _vehicleDetails.value["speed"]?.toFloatOrNull() ?: 0f
+            val refreshedDetails = getDetailedCarData(currentSpeed)
+
+            val manager = helper.getManager()
+            val tempRaw = manager?.getProperty<Any>(VehiclePropertyIds.HVAC_TEMPERATURE_SET, 0)?.value
+            val tempValue = when(tempRaw) {
+                is Float -> tempRaw.toString()
+                is Int -> tempRaw.toFloat().toString()
+                else -> refreshedDetails["engine_temp"] ?: _vehicleDetails.value["engine_temp"] ?: "90.5"
+            }
+
+            _vehicleDetails.value = mapOf(
+                "model" to (refreshedDetails["model"] ?: _vehicleDetails.value["model"] ?: "G70 Sport"),
+                "vin" to (refreshedDetails["vin"] ?: _vehicleDetails.value["vin"] ?: "KMH-G70-2026-XXXX"),
+                "engine_temp" to tempValue,
+                "drive_mode" to (refreshedDetails["drive_mode"] ?: _vehicleDetails.value["drive_mode"] ?: "NORMAL"),
+                "speed" to currentSpeed.toInt().toString(),
+                "rpm" to (refreshedDetails["rpm"] ?: _vehicleDetails.value["rpm"] ?: "0")
+            )
+
+            Log.d("CarPropertyDataSource", "VHAL 및 C++ 동기 데이터 강제 새로고침 완료: ${_vehicleDetails.value}")
+        } catch (e: Exception) {
+            Log.e("CarPropertyDataSource", "VHAL 데이터 강제 수집 중 에러 발생", e)
+        }
     }
 
     // 문열림 위험 상황 판단

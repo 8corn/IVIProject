@@ -269,6 +269,11 @@ class CarPropertyManagerHelper(
         }
     }
 
+    // 매니저 인스턴스 반환
+    fun getManager(): CarPropertyManager? {
+        return propertyManager
+    }
+
     fun release() {
         try {
             propertyManager?.unregisterCallback(propertyCallback)
