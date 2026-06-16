@@ -69,98 +69,98 @@ fun SettingScreen(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            IconButton(
+                onClick = { carViewModel.refreshVehicleHealth() }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Refresh,
+                    contentDescription = "Refresh Vehicle Status",
+                    tint = MetallicSilver
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        IconButton(
-            onClick = { carViewModel.refreshVehicleHealth() }
-        ) {
-            Icon(
-                imageVector = Icons.Default.Refresh,
-                contentDescription = "Refresh Vehicle Status",
-                tint = MetallicSilver
-            )
-        }
-    }
-
-    Spacer(modifier = Modifier.height(16.dp))
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        horizontalArrangement = Arrangement.spacedBy(32.dp)
-    ) {
-        Column(
+        Row(
             modifier = Modifier
-                .weight(0.4f)
+                .fillMaxWidth()
                 .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            Column {
-                Text(
-                    text = details["model"] ?: "G70 Sport",
-                    color = Color.White,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Black
-                )
+            Column(
+                modifier = Modifier
+                    .weight(0.4f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = details["model"] ?: "G70 Sport",
+                        color = Color.White,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Black
+                    )
 
-                Text(
-                    text = "Connected System",
-                    color = Color.Gray,
-                    fontSize = 14.sp,
+                    Text(
+                        text = "Connected System",
+                        color = Color.Gray,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                    )
+                }
+
+                Column(
                     modifier = Modifier
-                        .padding(top = 4.dp)
-                )
+                        .padding(bottom = 16.dp)
+                ) {
+                    Text(
+                        text = "Software Version: 1.0.0-8corn",
+                        color = Color.DarkGray,
+                        fontSize = 13.sp
+                    )
+                }
             }
 
             Column(
                 modifier = Modifier
-                    .padding(bottom = 16.dp)
+                    .weight(0.6f)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
             ) {
-                Text(
-                    text = "Software Version: 1.0.0-8corn",
-                    color = Color.DarkGray,
-                    fontSize = 13.sp
-                )
-            }
-        }
-
-        Column (
-            modifier = Modifier
-                .weight(0.6f)
-                .fillMaxHeight()
-                .verticalScroll(rememberScrollState())
-        ) {
-            SettingItem(
-                title = "모델명",
-                value = details["model"] ?: "G70 Sport"
-            )
-
-            SettingItem(
-                title = "차대번호 (VIN)",
-                value = details["vin"] ?: "KMH-G70-2026-XXXX"
-            )
-
-            SettingItem(
-                title = "엔진 상태",
-                value = "${details["engine_temp"] ?: "0"}°C (정상)"
-            )
-
-            SettingItem(
-                title = "드라이브 모드",
-                value = details["drive_mode"] ?: "NORMAL"
-            )
-
-            repeat(10) {
                 SettingItem(
-                    title = "추가 설정 항목 $it",
-                    value = "설정값"
+                    title = "모델명",
+                    value = details["model"] ?: "G70 Sport"
                 )
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                SettingItem(
+                    title = "차대번호 (VIN)",
+                    value = details["vin"] ?: "KMH-G70-2026-XXXX"
+                )
+
+                SettingItem(
+                    title = "엔진 상태",
+                    value = "${details["engine_temp"] ?: "0"}°C (정상)"
+                )
+
+                SettingItem(
+                    title = "드라이브 모드",
+                    value = details["drive_mode"] ?: "NORMAL"
+                )
+
+                repeat(10) {
+                    SettingItem(
+                        title = "추가 설정 항목 $it",
+                        value = "설정값"
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
