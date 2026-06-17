@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
+import com.corn.hyundaiproject.presentation.navigation.HyundaiNavHost
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiProjectTheme
 import dagger.hilt.android.AndroidEntryPoint
 

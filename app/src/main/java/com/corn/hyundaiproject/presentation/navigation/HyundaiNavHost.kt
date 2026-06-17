@@ -1,4 +1,4 @@
-package com.corn.hyundaiproject.presentation
+package com.corn.hyundaiproject.presentation.navigation
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -7,7 +7,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.corn.hyundaiproject.presentation.screen.HomeScreen
 import com.corn.hyundaiproject.presentation.screen.MainScreen
 import com.corn.hyundaiproject.presentation.screen.PhoneScreen
