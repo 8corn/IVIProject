@@ -1,13 +1,31 @@
 package com.corn.hyundaiproject.presentation.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.corn.hyundaiproject.presentation.ui.theme.HyundaiPureBlack
+import com.corn.hyundaiproject.presentation.ui.theme.MetallicSilver
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 
 @Composable
@@ -18,12 +36,124 @@ fun DashboardScreen(
 ) {
     val details by carViewModel.vehicleDetails.collectAsState()
 
-    IconButton(
-        onClick = onNavigateToSettings
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(HyundaiPureBlack)
+            .padding(24.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.Settings,
-            contentDescription = "설정 이동"
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "G70 인포테인먼트",
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            IconButton(
+                onClick = onNavigateToSettings
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "설정 이동",
+                    tint = MetallicSilver
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = details["rpm"] ?: "0",
+                    color = Color.Cyan,
+                    fontSize = 48.sp,
+                    fontWeight = FontWeight.Black
+                )
+
+                Text(
+                    text = "RPM",
+                    color = Color.Gray,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = details["speed"] ?: "0",
+                    color = Color.White,
+                    fontSize = 80.sp,
+                    fontWeight = FontWeight.Black
+                )
+
+                Text(
+                    text = "km/h",
+                    color = MetallicSilver,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Column(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "DRIVE MODE: ",
+                        color = Color.Gray,
+                        fontSize = 14.sp
+                    )
+
+                    Text(
+                        text = details["drive_mode"] ?: "NORMAL",
+                        color = Color.Yellow,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "ENGINE TEMP",
+                        color = Color.Gray,
+                        fontSize = 14.sp
+                    )
+
+                    Text(
+                        text = "${details["engine_temp"] ?: "90.5"}°C",
+                        color = Color.Red,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // TODO: onNavigateToHvac 연결
     }
 }
