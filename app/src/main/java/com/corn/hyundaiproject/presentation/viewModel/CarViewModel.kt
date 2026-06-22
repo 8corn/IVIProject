@@ -5,20 +5,32 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.corn.hyundaiproject.data.repository.CarRepositoryImpl
+import com.corn.hyundaiproject.domain.model.HvacInfo
 import com.corn.hyundaiproject.domain.repository.CarRepository
+import com.corn.hyundaiproject.domain.usecase.GetTemperatureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CarViewModel @Inject constructor (
     application: Application,
-    private val repository: CarRepository
+    private val repository: CarRepository,
+    private val getTemperatureUseCase: GetTemperatureUseCase,
 ) : AndroidViewModel(application) {
 
     val vehicleDetails: StateFlow<Map<String, String>> = repository.vehicleDetails
     val displayUnits: StateFlow<Map<String, String>> = repository.vehicleDetails
+
+    val hvacInfo: StateFlow<HvacInfo?> = getTemperatureUseCase()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
 
     fun refreshVehicleHealth() {
         viewModelScope.launch {
