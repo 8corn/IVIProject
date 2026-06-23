@@ -46,6 +46,17 @@ class CarViewModel @Inject constructor (
         }
     }
 
+    fun updateTargetTemperature(targetTemp: Float) {
+        viewModelScope.launch {
+            try {
+                Log.d("CarViewModel", "VHAL에 목표 온도 설정 요청: ${targetTemp}°C")
+                repository.setTemperature(targetTemp)
+            } catch (e: Exception) {
+                Log.e("CarViewModel", "온도 설정 실패", e)
+            }
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         // Helper → DataSource → Repository → MainViewModel → UI
