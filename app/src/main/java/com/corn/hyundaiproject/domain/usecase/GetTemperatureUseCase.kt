@@ -19,11 +19,11 @@ class GetTemperatureUseCase (
                 else -> null
             }
 
-//            HvacInfo(
-//                temperature = temp,
-//                warningMessage = warning,
-//                isDoorLocked =  isLocked
-//            )
+            HvacInfo(
+                temperature = temp,
+                warningMessage = warning,
+                isDoorLocked =  isLocked
+            )
         }
     }
 }
