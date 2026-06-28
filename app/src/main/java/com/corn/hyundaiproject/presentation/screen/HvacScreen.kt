@@ -14,12 +14,16 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiPureBlack
 import com.corn.hyundaiproject.presentation.ui.theme.MetallicSilver
@@ -59,6 +63,17 @@ fun HvacScreen(
             }
 
             Spacer(modifier = Modifier.width(20.dp))
+
+            Text(
+                text = "공조 시스템 설정 (HVAC)",
+                color = Color.White,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+
         }
     }
 }
