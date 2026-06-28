@@ -73,7 +73,15 @@ fun HvacScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-
+            Text(
+                text = if (isLocked) "차량 문 잠김" else "차량 문 열림",
+                color = if (isLocked) Color.Gray else Color.Yellow,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(end = 8.dp)
+            )
         }
+
+        Spacer(modifier = Modifier.height(60.dp))
     }
 }
