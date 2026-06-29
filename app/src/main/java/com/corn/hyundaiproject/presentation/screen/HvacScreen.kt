@@ -28,6 +28,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiPureBlack
 import com.corn.hyundaiproject.presentation.ui.theme.MetallicSilver
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
+import java.util.Locale
 
 @Composable
 fun HvacScreen(
@@ -95,7 +96,14 @@ fun HvacScreen(
                 fontSize = 16.sp
             )
 
+            Text(
+                text = "${String.format(Locale.getDefault(), "%.1f", currentTemp)}°C",
+                color = Color.White,
+                fontSize = 72.sp,
+                fontWeight = FontWeight.Black
+            )
 
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
