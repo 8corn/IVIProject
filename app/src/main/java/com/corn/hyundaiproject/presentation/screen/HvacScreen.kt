@@ -83,5 +83,19 @@ fun HvacScreen(
         }
 
         Spacer(modifier = Modifier.height(60.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "설정 온도",
+                color = Color.Gray,
+                fontSize = 16.sp
+            )
+
+
+        }
     }
 }
