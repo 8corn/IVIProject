@@ -137,8 +137,14 @@ fun HvacScreen(
                     modifier = Modifier
                         .width(80.dp)
                         .height(60.dp)
-
-                ) { }
+                ) {
+                    Text(
+                        text = "+",
+                        color = Color.Red,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
