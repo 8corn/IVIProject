@@ -133,6 +133,10 @@ fun HvacScreen(
                     onClick = {
                         carViewModel.updateTargetTemperature(currentTemp + 0.5f)
                     },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray),
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(60.dp)
 
                 ) { }
             }
