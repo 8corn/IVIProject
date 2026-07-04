@@ -15,6 +15,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -146,6 +148,21 @@ fun HvacScreen(
                     )
                 }
             }
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = if (hvacState?.warningMessage != null) Color(0xFF3A1E1E) else Color(0xFF1C1C1E)
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+            ) { }
         }
     }
 }
