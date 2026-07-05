@@ -162,7 +162,14 @@ fun HvacScreen(
             Column(
                 modifier = Modifier
                     .padding(16.dp)
-            ) { }
+            ) {
+                Text(
+                    text = "차량 공조 실시간 상태",
+                    color = if (hvacState?.warningMessage != null) Color.Red else Color.Green,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
