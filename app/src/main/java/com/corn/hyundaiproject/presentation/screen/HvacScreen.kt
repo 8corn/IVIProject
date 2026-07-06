@@ -169,6 +169,14 @@ fun HvacScreen(
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = warningMessage,
+                    color = Color.LightGray,
+                    fontSize = 15.sp
+                )
             }
         }
     }
