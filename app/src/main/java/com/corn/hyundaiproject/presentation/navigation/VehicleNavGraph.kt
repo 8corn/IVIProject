@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.corn.hyundaiproject.presentation.screen.DashboardScreen
+import com.corn.hyundaiproject.presentation.screen.HvacScreen
 import com.corn.hyundaiproject.presentation.screen.SettingScreen
 
 @Composable
@@ -36,7 +37,11 @@ fun VehicleNavGraph(
         }
 
         composable (route = VehicleRoutes.HVAC) {
-            // 공조 제어 화면 주소 등록
+            HvacScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
