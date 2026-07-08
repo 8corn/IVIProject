@@ -35,6 +35,7 @@ fun DashboardScreen(
     onNavigateToHvac: () -> Unit
 ) {
     val details by carViewModel.vehicleDetails.collectAsState()
+    val hvacInfo by carViewModel.hvacInfo.collectAsState()
 
     Column(
         modifier = Modifier
