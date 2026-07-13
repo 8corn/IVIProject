@@ -196,7 +196,16 @@ fun DashboardScreen(
                             .size(28.dp)
                     )
 
-
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "${hvacInfo?.temperature ?: 22.0}°C",
+                            color = Color.White,
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
