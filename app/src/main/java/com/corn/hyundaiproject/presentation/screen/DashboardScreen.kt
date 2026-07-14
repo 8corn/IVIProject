@@ -205,6 +205,15 @@ fun DashboardScreen(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold
                         )
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Text(
+                            text = "PASS",
+                            color = Color.Gray,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
