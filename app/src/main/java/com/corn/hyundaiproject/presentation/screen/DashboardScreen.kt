@@ -34,10 +34,12 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiPureBlack
 import com.corn.hyundaiproject.presentation.ui.theme.MetallicSilver
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
+import com.corn.hyundaiproject.presentation.viewModel.MediaViewModel
 
 @Composable
 fun DashboardScreen(
     carViewModel: CarViewModel = hiltViewModel(),
+    mediaViewModel: MediaViewModel = hiltViewModel(),
     onNavigateToSettings: () -> Unit,
     onNavigateToHvac: () -> Unit
 ) {
