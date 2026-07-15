@@ -162,7 +162,12 @@ fun DashboardScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) { }
 
         Box(
             modifier = Modifier
