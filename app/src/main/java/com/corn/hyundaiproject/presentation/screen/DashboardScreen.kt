@@ -171,6 +171,7 @@ fun DashboardScreen(
                 .clip(RoundedCornerShape(16.dp))
                 .background(Color(0xFF111111))
                 .padding(horizontal = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) { }
 
         Box(
