@@ -167,6 +167,10 @@ fun DashboardScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(70.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color(0xFF111111))
+                .padding(horizontal = 20.dp),
         ) { }
 
         Box(
