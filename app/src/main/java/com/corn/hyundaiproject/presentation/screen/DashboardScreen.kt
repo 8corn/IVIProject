@@ -45,6 +45,7 @@ fun DashboardScreen(
 ) {
     val details by carViewModel.vehicleDetails.collectAsState()
     val hvacInfo by carViewModel.hvacInfo.collectAsState()
+    val mediaState by mediaViewModel.mediaState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -77,7 +78,7 @@ fun DashboardScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Row(
             modifier = Modifier
