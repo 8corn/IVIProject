@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Air
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.corn.hyundaiproject.presentation.ui.theme.G70Red
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiPureBlack
 import com.corn.hyundaiproject.presentation.ui.theme.MetallicSilver
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
@@ -173,7 +175,14 @@ fun DashboardScreen(
                 .background(Color(0xFF111111))
                 .padding(horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically
-        ) { }
+        ) {
+            Icon(
+                imageVector = Icons.Default.MusicNote,
+                contentDescription = null,
+                tint = G70Red,
+                modifier = Modifier.size(28.dp)
+            )
+        }
 
         Box(
             modifier = Modifier
