@@ -186,6 +186,26 @@ fun DashboardScreen(
 
         Spacer(modifier = Modifier.width(16.dp))
 
+        Column(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            Text(
+                text = mediaState.title,
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
+            )
+
+            Text(
+                text = mediaState.artist,
+                color = Color.Gray,
+                fontSize = 13.sp,
+                maxLines = 1
+            )
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
