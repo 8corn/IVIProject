@@ -50,17 +50,18 @@ fun HyundaiNavHost(
             )
         }
         composable ("main") {
-            MainScreen(
-                onSettingsClick = {
-                    navController.navigate("settings")
-                },
-                onHomeClick = {
-                    navController.popBackStack(
-                        route = "launcher",
-                        inclusive = false
-                    )
-                }
-            )
+            VehicleNavGraph()
+//            MainScreen(
+//                onSettingsClick = {
+//                    navController.navigate("settings")
+//                },
+//                onHomeClick = {
+//                    navController.popBackStack(
+//                        route = "launcher",
+//                        inclusive = false
+//                    )
+//                }
+//            )
         }
         composable("search") {
             SearchScreen(
