@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Air
 import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -203,6 +205,22 @@ fun DashboardScreen(
                 color = Color.Gray,
                 fontSize = 13.sp,
                 maxLines = 1
+            )
+        }
+
+        IconButton(
+            onClick = {
+                mediaViewModel.togglePlay()
+            },
+            modifier = Modifier
+                .size(48.dp)
+        ) {
+            Icon(
+                imageVector = if (mediaState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier
+                    .size(32.dp)
             )
         }
 
