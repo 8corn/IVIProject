@@ -223,60 +223,60 @@ fun DashboardScreen(
                     .size(32.dp)
             )
         }
+    }
 
-        Box(
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(72.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color(0xFF1A1A1A))
+            .clickable { onNavigateToHvac() }
+            .padding(horizontal = 24.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(72.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFF1A1A1A))
-                .clickable { onNavigateToHvac() }
-                .padding(horizontal = 24.dp),
-            contentAlignment = Alignment.Center
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Text(
+                    text = "DRIVER",
+                    color = Color.Gray,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Icon(
+                    imageVector = Icons.Default.Air,
+                    contentDescription = "AC Status",
+                    tint = Color.Cyan,
+                    modifier = Modifier
+                        .size(28.dp)
+                )
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "DRIVER",
+                        text = "${hvacInfo?.temperature ?: 22.0}°C",
+                        color = Color.White,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Text(
+                        text = "PASS",
                         color = Color.Gray,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold
                     )
-
-                    Icon(
-                        imageVector = Icons.Default.Air,
-                        contentDescription = "AC Status",
-                        tint = Color.Cyan,
-                        modifier = Modifier
-                            .size(28.dp)
-                    )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "${hvacInfo?.temperature ?: 22.0}°C",
-                            color = Color.White,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Spacer(modifier = Modifier.width(12.dp))
-
-                        Text(
-                            text = "PASS",
-                            color = Color.Gray,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
                 }
             }
         }
