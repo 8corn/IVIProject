@@ -44,6 +44,7 @@ import com.corn.hyundaiproject.presentation.viewModel.MediaViewModel
 fun DashboardScreen(
     carViewModel: CarViewModel = hiltViewModel(),
     mediaViewModel: MediaViewModel = hiltViewModel(),
+    onHomeClick: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToHvac: () -> Unit
 ) {

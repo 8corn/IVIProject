@@ -11,7 +11,8 @@ import com.corn.hyundaiproject.presentation.screen.SettingScreen
 
 @Composable
 fun VehicleNavGraph(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    onHomeClick: () -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -24,7 +25,8 @@ fun VehicleNavGraph(
                 },
                 onNavigateToHvac = {
                     navController.navigate(VehicleRoutes.HVAC)
-                }
+                },
+                onHomeClick = onHomeClick
             )
         }
 
