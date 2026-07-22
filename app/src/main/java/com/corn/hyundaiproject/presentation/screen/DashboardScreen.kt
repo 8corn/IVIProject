@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Air
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -67,7 +68,17 @@ fun DashboardScreen(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
-            ) { }
+            ) {
+                IconButton(
+                    onClick = onHomeClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Home,
+                        contentDescription = "홈으로",
+                        tint = Color.White
+                    )
+                }
+            }
             Text(
                 text = "G70 인포테인먼트",
                 color = Color.White,
