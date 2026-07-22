@@ -65,6 +65,9 @@ fun DashboardScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) { }
             Text(
                 text = "G70 인포테인먼트",
                 color = Color.White,
