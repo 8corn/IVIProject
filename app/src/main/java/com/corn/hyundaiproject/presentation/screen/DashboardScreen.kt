@@ -77,6 +77,8 @@ fun DashboardScreen(
                         contentDescription = "홈으로",
                         tint = Color.White
                     )
+
+                    Spacer(modifier = Modifier.width(8.dp))
                 }
             }
             Text(
