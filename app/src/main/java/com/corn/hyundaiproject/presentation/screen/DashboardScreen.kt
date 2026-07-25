@@ -79,14 +79,15 @@ fun DashboardScreen(
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = "G70 인포테인먼트",
+                        color = Color.White,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
-            Text(
-                text = "G70 인포테인먼트",
-                color = Color.White,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
 
             IconButton(
                 onClick = onNavigateToSettings
