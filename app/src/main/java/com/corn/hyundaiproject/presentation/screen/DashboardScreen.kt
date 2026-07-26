@@ -87,16 +87,16 @@ fun DashboardScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
-            }
 
-            IconButton(
-                onClick = onNavigateToSettings
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "설정 이동",
-                    tint = MetallicSilver
-                )
+                IconButton(
+                    onClick = onNavigateToSettings
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "설정 이동",
+                        tint = MetallicSilver
+                    )
+                }
             }
         }
 
