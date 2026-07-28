@@ -115,6 +115,21 @@ fun DashboardScreen(
                     tint = G70Red,
                     modifier = Modifier.size(28.dp)
                 )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    Text(
+                        text = mediaState.title,
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
+                    )
+                }
             }
 
         Row(
