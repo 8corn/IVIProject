@@ -108,7 +108,14 @@ fun DashboardScreen(
                     .clip(RoundedCornerShape(16.dp))
                     .background(Color(0xFF111111))
                     .padding(horizontal = 20.dp)
-            ) { }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MusicNote,
+                    contentDescription = null,
+                    tint = G70Red,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
 
         Row(
             modifier = Modifier
