@@ -129,6 +129,27 @@ fun DashboardScreen(
                         fontWeight = FontWeight.Bold,
                         maxLines = 1
                     )
+
+                    Text(
+                        text = mediaState.artist,
+                        color = Color.Gray,
+                        fontSize = 13.sp,
+                        maxLines = 1
+                    )
+
+                    IconButton(
+                        onClick = {
+                            mediaViewModel.togglePlay()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (mediaState.isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier
+                                .size(32.dp)
+                        )
+                    }
                 }
             }
 
