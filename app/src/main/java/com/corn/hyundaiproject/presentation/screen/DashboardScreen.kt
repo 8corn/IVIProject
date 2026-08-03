@@ -191,6 +191,14 @@ fun DashboardScreen(
                                 fontWeight = FontWeight.Bold
                             )
                         }
+
+                        Icon(
+                            imageVector = Icons.Default.Air,
+                            contentDescription = "AC",
+                            tint = Color.Cyan,
+                            modifier = Modifier
+                                .size(28.dp)
+                        )
                     }
                 }
             }
