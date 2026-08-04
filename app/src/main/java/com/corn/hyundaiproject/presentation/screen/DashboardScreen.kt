@@ -199,6 +199,10 @@ fun DashboardScreen(
                             modifier = Modifier
                                 .size(28.dp)
                         )
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) { }
                     }
                 }
             }
