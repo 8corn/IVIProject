@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.media3.common.C
 import com.corn.hyundaiproject.presentation.ui.theme.G70Red
 import com.corn.hyundaiproject.presentation.ui.theme.HyundaiPureBlack
 import com.corn.hyundaiproject.presentation.ui.theme.MetallicSilver
@@ -202,7 +203,13 @@ fun DashboardScreen(
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically
-                        ) { }
+                        ) {
+                            Text(
+                                text = "${hvacInfo?.temperature ?: 22.0}°C",
+                                color = Color.White,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold)
+                        }
                     }
                 }
             }
