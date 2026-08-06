@@ -208,7 +208,10 @@ fun DashboardScreen(
                                 text = "${hvacInfo?.temperature ?: 22.0}°C",
                                 color = Color.White,
                                 fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold)
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Spacer(modifier = Modifier.width(12.dp))
                         }
                     }
                 }
