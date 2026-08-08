@@ -75,7 +75,7 @@ fun DashboardScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Home,
-                        contentDescription = "홈으로",
+                        contentDescription = "Home",
                         tint = Color.White
                     )
 
@@ -94,7 +94,7 @@ fun DashboardScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Settings,
-                        contentDescription = "설정 이동",
+                        contentDescription = "Settings",
                         tint = MetallicSilver
                     )
                 }
