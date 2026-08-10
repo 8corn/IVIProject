@@ -195,7 +195,7 @@ fun DashboardScreen(
 
                         Icon(
                             imageVector = Icons.Default.Air,
-                            contentDescription = "AC",
+                            contentDescription = "A/C",
                             tint = Color.Cyan,
                             modifier = Modifier
                                 .size(28.dp)
