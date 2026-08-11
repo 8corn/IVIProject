@@ -105,6 +105,14 @@ fun DashboardScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .weight(1f),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) { }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
                     .height(70.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(Color(0xFF111111))
