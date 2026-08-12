@@ -108,7 +108,24 @@ fun DashboardScreen(
                     .weight(1f),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
-            ) { }
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = details["rpm"] ?: "0",
+                        color = Color.Cyan,
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Black
+                    )
+
+                    Text(
+                        text = "RPM",
+                        color = Color.Gray,
+                        fontSize = 14.sp
+                    )
+                }
+            }
 
             Row(
                 modifier = Modifier
