@@ -125,6 +125,24 @@ fun DashboardScreen(
                         fontSize = 14.sp
                     )
                 }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = details["speed"] ?: "0",
+                        color = Color.White,
+                        fontSize = 80.sp,
+                        fontWeight = FontWeight.Black
+                    )
+
+                    Text(
+                        text = "km/h",
+                        color = MetallicSilver,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
 
             Row(
