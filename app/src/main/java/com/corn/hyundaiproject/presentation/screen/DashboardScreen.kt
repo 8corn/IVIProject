@@ -143,6 +143,10 @@ fun DashboardScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) { }
             }
 
             Row(
