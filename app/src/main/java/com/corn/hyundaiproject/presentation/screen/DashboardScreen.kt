@@ -145,8 +145,20 @@ fun DashboardScreen(
                 }
 
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) { }
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "DRIVE: ",
+                            color = Color.Gray,
+                            fontSize = 14.sp
+                        )
+
+                        Text()
+                    }
+                }
             }
 
             Row(
