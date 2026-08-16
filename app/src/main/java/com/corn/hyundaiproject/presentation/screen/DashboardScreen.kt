@@ -156,8 +156,17 @@ fun DashboardScreen(
                             fontSize = 14.sp
                         )
 
-                        Text()
+                        Text(
+                            text = details["drive_mode"] ?: "NORMAL",
+                            color = Color.Yellow,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) { }
                 }
             }
 
