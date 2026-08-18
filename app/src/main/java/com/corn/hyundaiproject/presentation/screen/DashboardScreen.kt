@@ -166,9 +166,24 @@ fun DashboardScreen(
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically
-                    ) { }
+                    ) {
+                        Text(
+                            text = "TEMP: ",
+                            color = Color.Gray,
+                            fontSize = 14.sp
+                        )
+
+                        Text(
+                            text = "${details["engine_temp"] ?: "90.5"}°C",
+                            color = Color.Red,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
+
+            Spacer()
 
             Row(
                 modifier = Modifier
