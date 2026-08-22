@@ -198,7 +198,7 @@ fun DashboardScreen(
                     imageVector = Icons.Default.MusicNote,
                     contentDescription = null,
                     tint = G70Red,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(32.dp)
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
