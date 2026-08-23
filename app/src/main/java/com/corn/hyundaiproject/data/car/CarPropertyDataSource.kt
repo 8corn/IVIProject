@@ -87,6 +87,9 @@ class CarPropertyDataSource @Inject constructor(
                 _drivingStatus.value = checkDrivingStatus(80f)
 
                 _climateAdvice.value = getClimateAdvice(currentExteriorTemp, temp)
+
+                val advice = getClimateAdvice(currentExteriorTemp, temp)
+                _climateAdvice.value = advice
             }
             VehiclePropertyIds.ENV_OUTSIDE_TEMPERATURE -> {
                 currentExteriorTemp = value as Float
