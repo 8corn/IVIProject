@@ -65,6 +65,10 @@ Java_com_corn_hyundaiproject_data_car_CarPropertyDataSource_getClimateAdvice(
     float diff = exteriorTemp - interiorTemp;
     unsigned char adviceFlag = 0x00;
 
+    if (interiorTemp >= 30.0f) {
+        return env->NewStringUTF("실내 온도가 너무 높습니다! 에어컨을 가동하세요.");
+    }
+
     if (diff > 10.0f)       adviceFlag |= 0x01;
     else if (diff < -5.0f)  adviceFlag |= 0x02;
 

@@ -290,7 +290,7 @@ fun DashboardScreen(
                         ) {
                             Text(
                                 text = "${hvacInfo?.temperature ?: 22.0}°C",
-                                color = Color.White,
+                                color = if ((hvacInfo?.temperature ?: 0f) >= 30f) Color.Red else Color.White,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold
                             )

@@ -2,9 +2,12 @@ package com.corn.hyundaiproject.data.car
 
 import android.car.VehiclePropertyIds
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +25,29 @@ class CarPropertyDataSource @Inject constructor(
         init {
             System.loadLibrary("native-lib")
         }
+    }
+
+    init {
+        val handler = Handler(Looper.getMainLooper())
+        var fakeTemp = 22f
+        var increasing = true
+
+        handler.post(object : Runnable {
+            override fun run() {
+                if (increasing) fakeTemp += 0.5f else fakeTemp -= 0.5f
+                if (fakeTemp >= 32f) increasing = false
+                if (fakeTemp <= 20f) increasing = true
+
+                _temperature.value = fakeTemp
+
+                val advice = getClimateAdvice(currentExteriorTemp, fakeTemp)
+                _climateAdvice.value = advice
+
+                Log.d("G70_VHAL_TEST", "현재 온도: $fakeTemp, C++: $advice")
+
+                handler.postDelayed(this, 1000)
+            }
+        })
     }
 
     // C++에 있는 함수를 정의 -> 함수 이름이 c++ 파일의 이름과 동일해야 함
