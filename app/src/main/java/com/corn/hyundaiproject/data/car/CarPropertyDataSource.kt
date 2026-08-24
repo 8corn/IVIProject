@@ -29,14 +29,14 @@ class CarPropertyDataSource @Inject constructor(
 
     init {
         val handler = Handler(Looper.getMainLooper())
-        var fakeTemp = 22f
+        var fakeTemp = 25f
         var increasing = true
 
         handler.post(object : Runnable {
             override fun run() {
-                if (increasing) fakeTemp += 0.5f else fakeTemp -= 0.5f
-                if (fakeTemp >= 32f) increasing = false
-                if (fakeTemp <= 20f) increasing = true
+                if (increasing) fakeTemp += 1.0f else fakeTemp -= 1.0f
+                if (fakeTemp >= 35f) increasing = false
+                if (fakeTemp <= 25f) increasing = true
 
                 _temperature.value = fakeTemp
 
