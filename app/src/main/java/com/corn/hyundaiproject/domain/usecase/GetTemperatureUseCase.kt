@@ -11,8 +11,9 @@ class GetTemperatureUseCase (
     operator fun invoke(): Flow<HvacInfo> {
         return combine(
             repository.temperature,
-            repository.isDoorLocked
-        ) { temp, isLocked ->
+            repository.isDoorLocked,
+            repository.climateAdvice
+        ) { temp, isLocked, advice ->
             val warning = when {
                 temp >= 30f -> "실내 온도가 너무 높습니다! 에어컨을 가동하세요."
                 temp <= 5f -> "실내 온도가 너무 낮습니다! 히터를 가동하세요."
