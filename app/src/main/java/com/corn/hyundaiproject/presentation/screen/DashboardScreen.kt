@@ -239,6 +239,13 @@ fun DashboardScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                hvacInfo?.warningMessage?.let { message ->
+                    Text(
+                        text = message,
+                        color = Color.Yellow
+                    )
+                }
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
