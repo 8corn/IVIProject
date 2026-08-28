@@ -242,7 +242,11 @@ fun DashboardScreen(
                 hvacInfo?.warningMessage?.let { message ->
                     Text(
                         text = message,
-                        color = Color.Yellow
+                        color = Color.Yellow,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .fillMaxWidth()
                     )
                 }
 
