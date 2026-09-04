@@ -33,5 +33,13 @@ fun VehicleStatusBar(
             color = Color.White,
             fontSize = 14.sp
         )
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = ""
+            )
+        }
     }
 }
