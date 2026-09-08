@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,7 +50,12 @@ fun VehicleStatusBar(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Icon()
+            Icon(
+                imageVector = Icons.Default.Bluetooth,
+                contentDescription = null
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
         }
     }
 }
