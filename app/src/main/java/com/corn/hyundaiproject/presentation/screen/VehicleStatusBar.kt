@@ -56,6 +56,11 @@ fun VehicleStatusBar(
             )
 
             Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text = userName,
+                color = Color.LightGray
+            )
         }
     }
 }
