@@ -59,7 +59,8 @@ fun VehicleStatusBar(
 
             Text(
                 text = userName,
-                color = Color.LightGray
+                color = Color.LightGray,
+                fontSize = 14.sp
             )
         }
     }
