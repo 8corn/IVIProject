@@ -3,6 +3,7 @@ package com.corn.hyundaiproject.presentation.navigation
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -19,15 +20,16 @@ import com.corn.hyundaiproject.presentation.screen.VoiceMemoScreen
 
 @Composable
 fun HyundaiNavHost(
-    modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = "launcher",
 ) {
-    Column {
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         NavHost(
             navController = navController,
             startDestination = startDestination,
-            modifier = modifier,
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() },
             popEnterTransition = { fadeIn() },
