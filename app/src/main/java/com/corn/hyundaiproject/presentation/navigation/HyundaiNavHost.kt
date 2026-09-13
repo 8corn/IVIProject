@@ -16,6 +16,7 @@ import com.corn.hyundaiproject.presentation.screen.ProjectionScreen
 import com.corn.hyundaiproject.presentation.screen.RadioScreen
 import com.corn.hyundaiproject.presentation.screen.SearchScreen
 import com.corn.hyundaiproject.presentation.screen.SettingScreen
+import com.corn.hyundaiproject.presentation.screen.VehicleStatusBar
 import com.corn.hyundaiproject.presentation.screen.VoiceMemoScreen
 
 @Composable
@@ -27,6 +28,7 @@ fun HyundaiNavHost(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        VehicleStatusBar(outsideTemp = "21.0")
         NavHost(
             navController = navController,
             startDestination = startDestination,
