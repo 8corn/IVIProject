@@ -29,7 +29,10 @@ fun HyundaiNavHost(
             .fillMaxSize()
     ) {
         VehicleStatusBar(outsideTemp = "21.0")
+
         NavHost(
+            modifier = Modifier
+                .weight(1f),
             navController = navController,
             startDestination = startDestination,
             enterTransition = { fadeIn() },
