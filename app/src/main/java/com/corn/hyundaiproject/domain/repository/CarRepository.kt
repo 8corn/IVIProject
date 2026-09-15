@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface CarRepository {
     val temperature: StateFlow<Float>
+    val outsideTemperature: StateFlow<Float> // 🕒 추가: 실외 온도
     val drivingStatus: StateFlow<String>
     val climateAdvice: StateFlow<String>
     val isDoorLocked: StateFlow<Boolean>

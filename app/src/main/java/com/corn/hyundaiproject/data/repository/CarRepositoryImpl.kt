@@ -13,6 +13,7 @@ class CarRepositoryImpl @Inject constructor(
 ) : CarRepository {
     // DataSource의 Flow를 그대로 ViewModel로 통과시킴
     override val temperature: StateFlow<Float> = dataSource.temperature
+    override val outsideTemperature: StateFlow<Float> = dataSource.outsideTemperature // 🕒 추가
     override val drivingStatus: StateFlow<String> = dataSource.drivingStatus
     override val climateAdvice: StateFlow<String> = dataSource.climateAdvice
     override val isDoorLocked: StateFlow<Boolean> = dataSource.isDoorLocked

@@ -30,20 +30,29 @@ class CarPropertyDataSource @Inject constructor(
     init {
         val handler = Handler(Looper.getMainLooper())
         var fakeTemp = 25f
+        var fakeOutsideTemp = 20f
         var increasing = true
 
         handler.post(object : Runnable {
             override fun run() {
-                if (increasing) fakeTemp += 1.0f else fakeTemp -= 1.0f
+                if (increasing) {
+                    fakeTemp += 1.0f
+                    fakeOutsideTemp += 0.2f
+                } else {
+                    fakeTemp -= 1.0f
+                    fakeOutsideTemp -= 0.2f
+                }
+                
                 if (fakeTemp >= 35f) increasing = false
                 if (fakeTemp <= 25f) increasing = true
 
                 _temperature.value = fakeTemp
+                _outsideTemperature.value = fakeOutsideTemp
 
-                val advice = getClimateAdvice(currentExteriorTemp, fakeTemp)
+                val advice = getClimateAdvice(fakeOutsideTemp, fakeTemp)
                 _climateAdvice.value = advice
 
-                Log.d("G70_VHAL_TEST", "현재 온도: $fakeTemp, C++: $advice")
+                Log.d("G70_VHAL_TEST", "현재 온도: $fakeTemp, 실외: $fakeOutsideTemp, C++: $advice")
 
                 handler.postDelayed(this, 1000)
             }
@@ -64,14 +73,16 @@ class CarPropertyDataSource @Inject constructor(
     // 상태 저장용 변수 (상태 판단을 위해 필요)
     private var currentGear: Int = 0
     private var isAnyDoorOpen: Boolean = false
-    private var currentExteriorTemp: Float = 20f
 
-    // 실시간 온도를 담는 StateFlow (Helper에서 온 데이터이자 UI에 뿌려줄 데이터 업데이트)
+    // 실시간 온도를 담는 StateFlow
     private val _drivingStatus = MutableStateFlow("상태 파악 중...")
     val drivingStatus: StateFlow<String> = _drivingStatus.asStateFlow()
 
     private val _temperature = MutableStateFlow(22f)
     val temperature: StateFlow<Float> = _temperature.asStateFlow()
+
+    private val _outsideTemperature = MutableStateFlow(20f)
+    val outsideTemperature: StateFlow<Float> = _outsideTemperature.asStateFlow()
 
     private val _climateAdvice = MutableStateFlow("쾌적합니다.")
     val climateAdvice: StateFlow<String> = _climateAdvice.asStateFlow()
@@ -103,34 +114,23 @@ class CarPropertyDataSource @Inject constructor(
     val radioStationName: StateFlow<String> = _radioStationName.asStateFlow()
 
     // Helper를 생성하면서 콜백(람다)을 전달
-    // Helper에서 onTemperatureChanged(temp)를 호출하면 이 블록이 실행됨
     private val helper = CarPropertyManagerHelper(context) { propertyId, value ->
         when (propertyId) {
             VehiclePropertyIds.HVAC_TEMPERATURE_SET -> {
                 val temp = value as Float
                 _temperature.value = temp
-
-                _drivingStatus.value = checkDrivingStatus(80f)
-
-                _climateAdvice.value = getClimateAdvice(currentExteriorTemp, temp)
-
-                val advice = getClimateAdvice(currentExteriorTemp, temp)
-                _climateAdvice.value = advice
+                _climateAdvice.value = getClimateAdvice(_outsideTemperature.value, temp)
             }
             VehiclePropertyIds.ENV_OUTSIDE_TEMPERATURE -> {
-                currentExteriorTemp = value as Float
+                val temp = value as Float
+                _outsideTemperature.value = temp
+                _climateAdvice.value = getClimateAdvice(temp, _temperature.value)
             }
             VehiclePropertyIds.PERF_VEHICLE_SPEED -> {
                 val speed = value as Float
-                Log.d("G70_Native", "수신된 실제 속도: $speed")
                 _drivingStatus.value = checkDrivingStatus(speed)
-
                 val newDetails = getDetailedCarData(speed)
                 _vehicleDetails.value = LinkedHashMap(newDetails)
-
-                Log.d("G70_Native", "속도: ${checkDrivingStatus(speed)}, 상시 데이터: ${_vehicleDetails.value}")
-
-                // ADAS 데이터 업데이트
                 _forwardDistance.value = (100f - speed).coerceAtLeast(10f)
                 _isLaneDeparture.value = speed > 120f
             }
@@ -139,48 +139,32 @@ class CarPropertyDataSource @Inject constructor(
                 checkDoorSafety()
             }
             289472775 -> {
-                // 문 열림 상태
                 isAnyDoorOpen = (value as? Array<*>)?.any { (it as? Int ?: 0) > 0 } ?: false
                 checkDoorSafety()
             }
             289472773 -> {
-                // 문 잠금 상태
                 val locked = (value as? Int) == 1
                 _isDoorLocked.value = locked
-                Log.d("G70_Native", "문 잠금 상태 변경됨: $locked")
             }
             VehiclePropertyIds.FUEL_LEVEL -> {
                 val fuel = value as Float
                 _fuelLevel.value = fuel
-                Log.d("G70_Native", checkFuelStatus(fuel))
-                Log.d("G70_Native", "현재 주행 효율 등금: ${getEfficiencyGrade(fuel)}등급")
             }
             VehiclePropertyIds.NIGHT_MODE -> {
                 val isNight = value as Boolean
-                val lightCommand = changeHeadlight(isNight)
-
-                if (lightCommand == 1) {
-                    Log.d("G70_Native", "헤드라이트가 켜집니다.")
-                } else {
-                    Log.d("G70_Native", "헤드라이트가 꺼집니다.")
-                }
+                changeHeadlight(isNight)
             }
             VehiclePropertyIds.WINDOW_POS -> {
                 val isOpen = value as? Boolean ?: false
                 _isWindowOpen.value = isOpen
-                Log.d("G70_Native", "DataSource 최종 수신 완료 - 창문 오픈 상태: $isOpen")
             }
             0x21400101 -> {
-                // 전방 거리
                 val distance = value as? Float ?: 0f
-                val refinedDistance = getAdasDistanceNative(distance)
-                _forwardDistance.value = refinedDistance
+                _forwardDistance.value = getAdasDistanceNative(distance)
             }
             0x21400102 -> {
-                // 차선 이탈 (시뮬레이터가 0 또는 1을 준다고 가정)
                 val departure = value as? Int ?: 0
-                val refinedDeparture = getAdasDistanceNative(departure.toFloat())
-                _isLaneDeparture.value = (refinedDeparture == 0.5f)
+                _isLaneDeparture.value = (getAdasDistanceNative(departure.toFloat()) == 0.5f)
             }
         }
     }
@@ -189,7 +173,6 @@ class CarPropertyDataSource @Inject constructor(
         try {
             val currentSpeed = _vehicleDetails.value["speed"]?.toFloatOrNull() ?: 0f
             val refreshedDetails = getDetailedCarData(currentSpeed)
-
             val manager = helper.getManager()
             val tempRaw = manager?.getProperty<Any>(VehiclePropertyIds.HVAC_TEMPERATURE_SET, 0)?.value
             val tempValue = when(tempRaw) {
@@ -197,7 +180,6 @@ class CarPropertyDataSource @Inject constructor(
                 is Int -> tempRaw.toFloat().toString()
                 else -> refreshedDetails["engine_temp"] ?: _vehicleDetails.value["engine_temp"] ?: "90.5"
             }
-
             _vehicleDetails.value = mapOf(
                 "model" to (refreshedDetails["model"] ?: _vehicleDetails.value["model"] ?: "G70 Sport"),
                 "vin" to (refreshedDetails["vin"] ?: _vehicleDetails.value["vin"] ?: "KMH-G70-2026-XXXX"),
@@ -206,83 +188,31 @@ class CarPropertyDataSource @Inject constructor(
                 "speed" to currentSpeed.toInt().toString(),
                 "rpm" to (refreshedDetails["rpm"] ?: _vehicleDetails.value["rpm"] ?: "0")
             )
-
-            Log.d("CarPropertyDataSource", "VHAL 및 C++ 동기 데이터 강제 새로고침 완료: ${_vehicleDetails.value}")
         } catch (e: Exception) {
             Log.e("CarPropertyDataSource", "VHAL 데이터 강제 수집 중 에러 발생", e)
         }
     }
 
-    // 문열림 위험 상황 판단
     private fun checkDoorSafety() {
         if (isHazardous(currentGear, isAnyDoorOpen)) {
             _drivingStatus.value = "위험! 주행 중 문 열림 감지!"
         }
     }
 
-    // 라디오 외부에서 호출되는 통로 함수
     fun requestRadioTune(isTuneUp: Boolean) {
         val details = tuneRadioNative(_radioFrequency.value, isTuneUp)
-
-        val freqStr = details["frequency"] ?: "87.5"
-        val station = details["station_name"] ?: "알 수 없는 채널"
-
-        _radioFrequency.value = freqStr.toFloatOrNull() ?: 87.5f
-        _radioStationName.value = station
+        _radioFrequency.value = details["frequency"]?.toFloatOrNull() ?: 87.5f
+        _radioStationName.value = details["station_name"] ?: "알 수 없는 채널"
     }
 
-//    // 속도 주행 UI 변경 테스트 코드
-//    init {
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            val testResult = checkDrivingStatus(120f)
-//            _drivingStatus.value = "테스트 중: $testResult"
-//        }, 3000)
-//    }
-
-    fun setTemperature(temp: Float) {
-        helper.setTemperature(temp)
-    }
-
+    fun setTemperature(temp: Float) = helper.setTemperature(temp)
     fun setDoorLock(lock: Boolean) {
         helper.setDoorLock(lock)
         _isDoorLocked.value = lock
     }
-
     fun setWindowPosition(isOpen: Boolean, areaId: Int) {
         helper.setWindowPosition(isOpen, areaId)
         _isWindowOpen.value = isOpen
     }
-
-    fun closeConnection() {
-        helper.release()
-    }
-
-//    // 클래스터 테스트
-//    init {
-//        val handler = Handler(Looper.getMainLooper())
-//        var fakeSpeed = 0f
-//        var fakeFuel = 20f
-//
-//        handler.post(object : Runnable {
-//            override fun run() {
-//                fakeSpeed += 5f
-//                if (fakeSpeed > 200f) fakeSpeed = 0f
-//
-//                fakeFuel -= 0.2f
-//                if (fakeFuel < 0f) fakeFuel = 60f
-//
-//                _fuelLevel.value = fakeFuel
-//
-//                val newDetails = getDetailedCarData(fakeSpeed)
-//
-//                _vehicleDetails.value = LinkedHashMap(newDetails)
-//                _drivingStatus.value = checkDrivingStatus(fakeSpeed)
-//                _forwardDistance.value = (100f - fakeSpeed).coerceAtLeast(10f)
-//
-//                Log.d("G70_PUMP", "펌프질 - Speed: $fakeSpeed, RPM: ${newDetails["rpm"]}")
-//
-//                handler.postDelayed(this, 500)
-//            }
-//        })
-//    }
+    fun closeConnection() = helper.release()
 }
