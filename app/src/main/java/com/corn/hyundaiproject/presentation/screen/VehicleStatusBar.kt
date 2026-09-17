@@ -13,13 +13,20 @@ import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun VehicleStatusBar(
@@ -27,6 +34,15 @@ fun VehicleStatusBar(
     userName: String = "Driver 1"
 ) {
     var currentTime by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            currentTime = sdf.format(Date())
+            delay(1000)
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
