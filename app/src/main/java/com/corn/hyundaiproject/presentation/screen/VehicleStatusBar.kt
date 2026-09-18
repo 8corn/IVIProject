@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
@@ -53,9 +54,10 @@ fun VehicleStatusBar(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "12:30 PM",
+            text = currentTime,
             color = Color.White,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
         )
 
         Row(
