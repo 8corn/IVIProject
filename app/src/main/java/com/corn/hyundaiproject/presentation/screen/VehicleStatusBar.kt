@@ -64,7 +64,7 @@ fun VehicleStatusBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "${outsideTemp}°C",
+                text = "${String.format(Locale.getDefault(), "%.1f", outsideTemp)}°C",
                 color = Color.White,
                 fontSize = 14.sp
             )
