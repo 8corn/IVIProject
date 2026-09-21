@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,11 +19,13 @@ import com.corn.hyundaiproject.presentation.screen.SearchScreen
 import com.corn.hyundaiproject.presentation.screen.SettingScreen
 import com.corn.hyundaiproject.presentation.screen.VehicleStatusBar
 import com.corn.hyundaiproject.presentation.screen.VoiceMemoScreen
+import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
 
 @Composable
 fun HyundaiNavHost(
     navController: NavHostController,
     startDestination: String = "launcher",
+    carViewModel: CarViewModel = hiltViewModel()
 ) {
     Column (
         modifier = Modifier
