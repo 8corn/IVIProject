@@ -5,6 +5,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -27,6 +29,7 @@ fun HyundaiNavHost(
     startDestination: String = "launcher",
     carViewModel: CarViewModel = hiltViewModel()
 ) {
+    val outsideTemp by carViewModel.outsideTemperature.collectAsState()
     Column (
         modifier = Modifier
             .fillMaxSize()
