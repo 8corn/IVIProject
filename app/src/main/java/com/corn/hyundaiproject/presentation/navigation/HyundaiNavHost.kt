@@ -30,11 +30,12 @@ fun HyundaiNavHost(
     carViewModel: CarViewModel = hiltViewModel()
 ) {
     val outsideTemp by carViewModel.outsideTemperature.collectAsState()
+
     Column (
         modifier = Modifier
             .fillMaxSize()
     ) {
-        VehicleStatusBar(outsideTemp = "21.0")
+        VehicleStatusBar(outsideTemp = outsideTemp)
 
         NavHost(
             modifier = Modifier
