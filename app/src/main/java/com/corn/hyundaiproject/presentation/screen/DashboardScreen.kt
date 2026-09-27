@@ -55,6 +55,14 @@ fun DashboardScreen(
     val hvacInfo by carViewModel.hvacInfo.collectAsState()
     val mediaState by mediaViewModel.mediaState.collectAsState()
 
+    val driveMode = details["drive_mode"] ?: "NORMAL"
+
+    val activeColor = when {
+        driveMode.contains("SPORTS") -> G70Red
+        driveMode.contains("ECO") -> Color(0xFF00C853)
+        else -> Color(0xFF00B0FF)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
