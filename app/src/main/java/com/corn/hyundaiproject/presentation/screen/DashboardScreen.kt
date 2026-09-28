@@ -123,7 +123,7 @@ fun DashboardScreen(
                 ) {
                     Text(
                         text = details["rpm"] ?: "0",
-                        color = Color.Cyan,
+                        color = activeColor,
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Black
                     )
