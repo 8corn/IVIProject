@@ -246,7 +246,7 @@ fun DashboardScreen(
                     }
                 }
 
-//                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 hvacInfo?.warningMessage?.let { message ->
                     Text(
