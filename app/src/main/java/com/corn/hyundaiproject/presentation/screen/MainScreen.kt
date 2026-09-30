@@ -106,12 +106,12 @@ fun MainScreen(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0D0D0D))
+            .background(Color.Black)
             .padding(16.dp)
     ) {
         Box(
             modifier = Modifier
-                .weight(0.65f)
+                .weight(0.7f)
                 .fillMaxHeight()
                 .padding(end = 8.dp)
                 .background(CarbonBlack, RoundedCornerShape(28.dp)),
