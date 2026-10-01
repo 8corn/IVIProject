@@ -329,8 +329,9 @@ fun MainScreen(
 
         Column (
             modifier = Modifier
-                .weight(0.35f)
-                .fillMaxHeight(),
+                .weight(0.3f)
+                .fillMaxHeight()
+                .padding(start = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             if (uiState.warningMessage.isNotEmpty()) {
