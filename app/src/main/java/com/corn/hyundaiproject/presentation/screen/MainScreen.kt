@@ -113,7 +113,7 @@ fun MainScreen(
             modifier = Modifier
                 .weight(0.7f)
                 .fillMaxHeight()
-                .padding(end = 8.dp)
+                .clip(RoundedCornerShape(28.dp))
                 .background(CarbonBlack, RoundedCornerShape(28.dp)),
             contentAlignment = Alignment.Center
         ) {
