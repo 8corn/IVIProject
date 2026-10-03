@@ -114,7 +114,7 @@ fun MainScreen(
                 .weight(0.7f)
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(28.dp))
-                .background(CarbonBlack, RoundedCornerShape(28.dp)),
+                .background(CarbonBlack),
             contentAlignment = Alignment.Center
         ) {
             if (uiState.isNavigatingToGasStation) {
