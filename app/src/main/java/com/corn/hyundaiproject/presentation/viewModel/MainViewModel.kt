@@ -162,7 +162,9 @@ data class IntegratedCarState(
     val hasDismissedFuelDialog: Boolean = false,
     val isNavigatingToGasStation: Boolean = false,
     val remainDistance: Float = 1200f,
-    val roadOffset: Float = 0f
+    val roadOffset: Float = 0f,
+    val selectedDestination: String = "",
+    val isNavigating: Boolean = false,
 )
 
 enum class SafetyLevel { SAFE, CAUTION, DANGER }
