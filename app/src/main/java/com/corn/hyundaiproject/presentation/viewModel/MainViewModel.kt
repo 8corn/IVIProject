@@ -28,6 +28,8 @@ class MainViewModel @Inject constructor (
     private var lastUpdateTime: Long = System.currentTimeMillis()
     private var remainDistanceMeter: Float = 1200f
 
+    private var selectedDestName = ""
+
     private val adasFlow = combine(
         repository.forwardDistance,
         repository.isLaneDeparture
