@@ -29,6 +29,7 @@ class MainViewModel @Inject constructor (
     private var remainDistanceMeter: Float = 1200f
 
     private var selectedDestName = ""
+    private var isGeneralNavigating = false
 
     private val adasFlow = combine(
         repository.forwardDistance,
