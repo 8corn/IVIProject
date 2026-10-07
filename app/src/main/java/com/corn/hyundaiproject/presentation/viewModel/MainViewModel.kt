@@ -31,6 +31,10 @@ class MainViewModel @Inject constructor (
     private var selectedDestName = ""
     private var isGeneralNavigating = false
 
+    fun startNavigation(destination: String) {
+        selectedDestName = destination
+    }
+
     private val adasFlow = combine(
         repository.forwardDistance,
         repository.isLaneDeparture
