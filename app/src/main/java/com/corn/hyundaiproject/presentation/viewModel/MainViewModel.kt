@@ -33,6 +33,7 @@ class MainViewModel @Inject constructor (
 
     fun startNavigation(destination: String) {
         selectedDestName = destination
+        isGeneralNavigating = true
     }
 
     private val adasFlow = combine(
