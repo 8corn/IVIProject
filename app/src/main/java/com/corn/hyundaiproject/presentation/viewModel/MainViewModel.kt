@@ -35,6 +35,7 @@ class MainViewModel @Inject constructor (
         selectedDestName = destination
         isGeneralNavigating = true
         remainDistanceMeter = (2000..5000).random().toFloat()
+        isNavigatingTrigger = true
     }
 
     private val adasFlow = combine(
