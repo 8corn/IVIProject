@@ -117,6 +117,7 @@ class MainViewModel @Inject constructor (
             remainDistance = remainDistanceMeter,
             roadOffset = roadOffset,
             selectedDestName = selectedDestName,
+            isNavigating = isGeneralNavigating,
         )
     }.stateIn(
         scope = viewModelScope,
