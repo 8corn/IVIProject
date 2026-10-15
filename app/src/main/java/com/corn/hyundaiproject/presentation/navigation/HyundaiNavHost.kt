@@ -22,6 +22,7 @@ import com.corn.hyundaiproject.presentation.screen.SettingScreen
 import com.corn.hyundaiproject.presentation.screen.VehicleStatusBar
 import com.corn.hyundaiproject.presentation.screen.VoiceMemoScreen
 import com.corn.hyundaiproject.presentation.viewModel.CarViewModel
+import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
 
 @Composable
 fun HyundaiNavHost(
@@ -87,6 +88,8 @@ fun HyundaiNavHost(
                 //            )
             }
             composable("search") {
+                val mainViewModel: MainViewModel = hiltViewModel()
+
                 SearchScreen(
                     onBackClick = {
                         navController.popBackStack()
