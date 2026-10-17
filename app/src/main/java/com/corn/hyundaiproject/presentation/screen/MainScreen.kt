@@ -117,7 +117,7 @@ fun MainScreen(
                 .background(CarbonBlack),
             contentAlignment = Alignment.Center
         ) {
-            if (uiState.isNavigatingToGasStation) {
+            if (uiState.isNavigatingToGasStation || uiState.isNavigating) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
