@@ -273,6 +273,12 @@ fun MainScreen(
                         val remainingMinutes = (distanceKm * 3.3f).toInt().coerceAtLeast(1)
 
                         Text(
+                            text = "목적지: ${uiState.selectedDestination}",
+                            color = G70Red,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Text(
                             text = "남은 거리: $formattedDistance",
                             color = G70Red,
                             fontSize = 16.sp,
