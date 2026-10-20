@@ -244,6 +244,7 @@ fun MainScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .background(Color(0xFF222222), RoundedCornerShape(14.dp))
                             ) { }
 
                             Row(
