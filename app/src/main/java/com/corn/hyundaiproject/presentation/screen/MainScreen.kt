@@ -157,7 +157,7 @@ fun MainScreen(
 
                         Column {
                             Text(
-                                text = "300m 앞 오른쪽 방향",
+                                text = if (uiState.isNavigating) "${uiState.selectedDestination} 방면",
                                 color = Color.White,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
@@ -240,14 +240,6 @@ fun MainScreen(
                             )
 
                             Spacer(modifier = Modifier.height(8.dp))
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(Color(0xFF222222), RoundedCornerShape(14.dp))
-                                    .padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) { }
 
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
