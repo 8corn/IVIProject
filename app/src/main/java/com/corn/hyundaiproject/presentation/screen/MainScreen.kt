@@ -157,7 +157,7 @@ fun MainScreen(
 
                         Column {
                             Text(
-                                text = if (uiState.isNavigating) "${uiState.selectedDestination} 방면",
+                                text = if (uiState.isNavigating) "${uiState.selectedDestination} 방면" else "주유소 안내 중",
                                 color = Color.White,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
