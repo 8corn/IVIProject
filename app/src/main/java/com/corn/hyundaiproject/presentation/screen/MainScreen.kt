@@ -164,7 +164,7 @@ fun MainScreen(
                             )
 
                             Text(
-                                text = "현대오일뱅크 서초지점",
+                                text = if (uiState.isNavigating)"",
                                 color = Color.LightGray,
                                 fontSize = 14.sp
                             )
