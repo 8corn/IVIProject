@@ -164,7 +164,7 @@ fun MainScreen(
                             )
 
                             Text(
-                                text = if (uiState.isNavigating)"",
+                                text = if (uiState.isNavigating)"추천 경로로 안내 중",
                                 color = Color.LightGray,
                                 fontSize = 14.sp
                             )
