@@ -164,7 +164,7 @@ fun MainScreen(
                             )
 
                             Text(
-                                text = if (uiState.isNavigating)"추천 경로로 안내 중",
+                                text = if (uiState.isNavigating)"추천 경로로 안내 중" else "현대오일뱅크 서초지점",
                                 color = Color.LightGray,
                                 fontSize = 14.sp
                             )
