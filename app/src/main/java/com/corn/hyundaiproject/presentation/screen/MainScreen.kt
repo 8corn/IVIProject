@@ -279,7 +279,7 @@ fun MainScreen(
                         )
 
                         Text(
-                            text = "남은 거리: ${String.format("%.1f", uiState.remainDistance)}",
+                            text = "남은 거리: ${String.format("%.1f", uiState.remainDistance / 1000)}km",
                             color = G70Red,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
