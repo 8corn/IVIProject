@@ -113,12 +113,11 @@ class MainViewModel @Inject constructor (
             fuelLevel =fuel,
             showFuelDialog = fuel < 15f && showDialogTrigger && !hasDismissedTrigger,
             hasDismissedFuelDialog = hasDismissedTrigger,
-            isNavigatingToGasStation = isNavigatingTrigger,
+            isNavigatingToGasStation = isNavigatingTrigger || isGeneralNavigating,
             remainDistance = remainDistanceMeter,
             roadOffset = roadOffset,
-            selectedDestName = selectedDestName,
+            selectedDestination = selectedDestName,
             isNavigating = isGeneralNavigating,
-            isNavigatingToGasStation = isNavigatingTrigger || isGeneralNavigating,
         )
     }.stateIn(
         scope = viewModelScope,

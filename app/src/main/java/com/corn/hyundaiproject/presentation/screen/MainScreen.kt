@@ -1,5 +1,6 @@
 package com.corn.hyundaiproject.presentation.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,6 +48,7 @@ import com.corn.hyundaiproject.presentation.viewModel.MainViewModel
 import com.corn.hyundaiproject.presentation.viewModel.MediaViewModel
 import java.util.Locale
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun MainScreen(
     mainViewModel: MainViewModel = hiltViewModel(),
