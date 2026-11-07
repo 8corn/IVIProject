@@ -30,6 +30,8 @@ fun VehicleNavGraph(
             )
         }
 
+        composable (VehicleRoutes.MAIN_MAP) {  }
+
         composable (route = VehicleRoutes.SETTINGS) {
             SettingScreen(
                 onBackClick = {
