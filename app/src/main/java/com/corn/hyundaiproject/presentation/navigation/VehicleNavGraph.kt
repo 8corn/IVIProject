@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.corn.hyundaiproject.presentation.screen.DashboardScreen
 import com.corn.hyundaiproject.presentation.screen.HvacScreen
+import com.corn.hyundaiproject.presentation.screen.MainScreen
 import com.corn.hyundaiproject.presentation.screen.SettingScreen
 
 @Composable
@@ -30,7 +31,13 @@ fun VehicleNavGraph(
             )
         }
 
-        composable (VehicleRoutes.MAIN_MAP) {  }
+        composable (VehicleRoutes.MAIN_MAP) {
+            MainScreen(
+                onSettingsClick = {
+                    navController.navigate(VehicleRoutes.SETTINGS)
+                }
+            )
+        }
 
         composable (route = VehicleRoutes.SETTINGS) {
             SettingScreen(
