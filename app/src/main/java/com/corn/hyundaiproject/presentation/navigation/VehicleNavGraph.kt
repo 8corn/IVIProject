@@ -35,7 +35,8 @@ fun VehicleNavGraph(
             MainScreen(
                 onSettingsClick = {
                     navController.navigate(VehicleRoutes.SETTINGS)
-                }
+                },
+                onHomeClick = onHomeClick
             )
         }
 
