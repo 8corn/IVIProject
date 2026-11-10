@@ -94,8 +94,8 @@ fun HyundaiNavHost(
                     onBackClick = {
                         navController.popBackStack()
                     },
-                    onRouteSelect = { selectedDestination ->
-                        mainViewModel.startNavigation(selectedDestination)
+                    onRouteSelect = { destination ->
+                        mainViewModel.startNavigation(destination)
                         navController.navigate("main") {
                             popUpTo("launcher")
                         }
