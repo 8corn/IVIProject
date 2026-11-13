@@ -99,6 +99,7 @@ fun HyundaiNavHost(
                         navController.navigate("main") {
                             popUpTo("launcher")
                         }
+                        launchSingleTop = true
                     }
                 )
             }
