@@ -97,6 +97,9 @@ class MainViewModel @Inject constructor (
             else -> hvacInfo.warningMessage ?: "안전 운행 중"
         }
 
+        // 내비게이션 안내 메세지
+        val navigationMessage = if ()
+
         // 통합 객체 생성
         IntegratedCarState(
             temperature = hvacInfo.temperature,
