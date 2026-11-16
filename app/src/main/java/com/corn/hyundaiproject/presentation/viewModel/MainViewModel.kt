@@ -99,7 +99,9 @@ class MainViewModel @Inject constructor (
 
         // 내비게이션 안내 메세지
         val navigationMessage = if (isNavigatingTrigger || isGeneralNavigating) {
-
+            when {
+                remainDistanceMeter
+            }
         }
 
         // 통합 객체 생성
