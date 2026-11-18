@@ -100,7 +100,7 @@ class MainViewModel @Inject constructor (
         // 내비게이션 안내 메세지
         val navigationMessage = if (isNavigatingTrigger || isGeneralNavigating) {
             when {
-                remainDistanceMeter
+                remainDistanceMeter <= 0f -> "목적지에 도착하였습니다. 안내를 종료합니다."
             }
         }
 
