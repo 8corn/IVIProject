@@ -105,6 +105,8 @@ class MainViewModel @Inject constructor (
                 remainDistanceMeter <= 1000f -> "약 1km 앞 목적지가 있습니다."
                 else -> "$selectedDestName 방면으로 안내 중입니다."
             }
+        } else {
+            null
         }
 
         // 통합 객체 생성
