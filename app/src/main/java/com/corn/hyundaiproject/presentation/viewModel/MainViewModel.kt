@@ -109,6 +109,8 @@ class MainViewModel @Inject constructor (
             null
         }
 
+        val finalMessage = when
+
         // 통합 객체 생성
         IntegratedCarState(
             temperature = hvacInfo.temperature,
