@@ -109,7 +109,9 @@ class MainViewModel @Inject constructor (
             null
         }
 
-        val finalMessage = when
+        val finalMessage = when {
+            safetyLevel == SafetyLevel.DANGER
+        }
 
         // 통합 객체 생성
         IntegratedCarState(
