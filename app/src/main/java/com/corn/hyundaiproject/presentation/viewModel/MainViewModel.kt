@@ -110,7 +110,7 @@ class MainViewModel @Inject constructor (
         }
 
         val finalMessage = when {
-            safetyLevel == SafetyLevel.DANGER
+            safetyLevel == SafetyLevel.DANGER -> "즉시 제동 및 차선 유지 필요"
         }
 
         // 통합 객체 생성
